@@ -90,6 +90,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		
 		JPanel inputPanel = new InputPanel();
 		//add(inputPanel);
+		
 		inputPanel.addPropertyChangeListener("mixer",
 				new PropertyChangeListener() {
 					@Override
@@ -325,10 +326,10 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 			cnt++; 
 			pnt = avg/cnt;			
 			
-			System.out.println("levl===" + (int)silenceDetector.currentSPL());
+			//System.out.println("levl===" + (int)silenceDetector.currentSPL());
 			System.out.println("testing avg " + pnt);
 		}
-		graphPanel.addDataPoint(silenceDetector.currentSPL(), System.currentTimeMillis());		
+		graphPanel.addDataPoint(silenceDetector.currentSPL(), System.currentTimeMillis()); //draws graph		
 		
 		//test if the sound level goes above a threshhold 
 		if((int)(silenceDetector.currentSPL()) > -70){

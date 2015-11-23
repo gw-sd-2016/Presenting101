@@ -18,6 +18,9 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.PropertyException;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +41,14 @@ import java.net.URL;
  * Terrence Lewis
  * */
 public class HelloWorld {
+
+	
+	//beginnings of the user error report for bad word detection
+	public static void UER(String e, String i){
+		
+		System.out.println("You've said a total of " + e + " bad words" );		
+	}
+	
 
     /**
      * Main method for running the HelloWorld demo.
@@ -64,15 +75,15 @@ public class HelloWorld {
 
             /* the microphone will keep recording until the program exits */
 	    if (microphone.startRecording()) {
-
+	    	int count =0; 
 	    //to look for these words the .gram file must be modified
 		System.out.println
-		    ("Say: (Good morning | basically | umm | test | ahh)");
-
+		    ("Current Bad Words: (basically | umm | test | ahh)");
+		
 		while (true) {
 		    System.out.println
-			("Start speaking. Press Ctrl-C to quit.\n");
-
+			("Start speaking. \n");
+		    
                     /*
                      * This method will return when the end of speech
                      * is reached. Note that the endpointer will determine
@@ -82,7 +93,16 @@ public class HelloWorld {
 		    
 		    if (result != null) {
 			String resultText = result.getBestFinalResultNoFiller();
+			//String reT = result.getTimedBestResult(true, true); //testing words with time stamps
 			System.out.println("You said: " + resultText + "\n");
+			//System.out.println(result.getFrameStatistics());
+			//new MKeyListener(); 
+			
+			count++; //counts bad words -> will add functionality to count individual bad words
+			UER(Integer.toString(count), resultText); //sends this to be printed
+		    
+			
+			new KeyListenerExample(); 
 		    } else {
 			System.out.println("I can't hear what you said.\n");
 		    }
@@ -102,5 +122,33 @@ public class HelloWorld {
             System.err.println("Problem creating HelloWorld: " + e);
             e.printStackTrace();
         }
+        
     }
+}
+
+
+
+class KeyListenerExample {
+   KeyListener listener = new KeyListener() {
+
+@Override
+
+public void keyPressed(KeyEvent event) {
+
+}
+
+@Override
+public void keyReleased(KeyEvent arg0) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void keyTyped(KeyEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+   };
+  
+
 }
