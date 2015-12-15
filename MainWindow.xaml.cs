@@ -14,13 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-
-//the following code is used for basic hand tracking with the Kinect
-//much of the following was found: 
-//http://pterneas.com/2014/03/21/kinect-for-windows-version-2-hand-tracking/
-//this will be modified more at a later time
-
-
 namespace KinectHandTracking
 {
     /// <summary>
@@ -72,13 +65,12 @@ namespace KinectHandTracking
                 _sensor.Close();
             }
         }
-        //finds the position of a hand or thumb - which is apparently similar to finding other joints 
+
         void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             var reference = e.FrameReference.AcquireFrame();
 
             // Color
-            // want to also display the color stream...
             using (var frame = reference.ColorFrameReference.AcquireFrame())
             {
                 if (frame != null)
@@ -98,7 +90,6 @@ namespace KinectHandTracking
 
                     frame.GetAndRefreshBodyData(_bodies);
 
-                    //displaying the joints
                     foreach (var body in _bodies)
                     {
                         if (body != null)
@@ -121,7 +112,9 @@ namespace KinectHandTracking
                                 // Find the hand states
                                 string rightHandState = "-";
                                 string leftHandState = "-";
-
+                                int cnt = 0; ; 
+				                //hand lasson counter
+				               
                                 switch (body.HandRightState)
                                 {
                                     case HandState.Open:
@@ -132,6 +125,7 @@ namespace KinectHandTracking
                                         break;
                                     case HandState.Lasso:
                                         rightHandState = "Lasso";
+					                    cnt++;
                                         break;
                                     case HandState.Unknown:
                                         rightHandState = "Unknown...";
@@ -153,6 +147,7 @@ namespace KinectHandTracking
                                         break;
                                     case HandState.Lasso:
                                         leftHandState = "Lasso";
+					                    cnt++; 
                                         break;
                                     case HandState.Unknown:
                                         leftHandState = "Unknown...";
@@ -163,7 +158,7 @@ namespace KinectHandTracking
                                     default:
                                         break;
                                 }
-
+                                reCount.Text = cnt.ToString();
                                 tblRightHandState.Text = rightHandState;
                                 tblLeftHandState.Text = leftHandState;
                             }
