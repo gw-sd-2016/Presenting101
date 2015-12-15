@@ -78,7 +78,7 @@ public class HelloWorld {
 	    	int count =0; 
 	    //to look for these words the .gram file must be modified
 		System.out.println
-		    ("Current Bad Words: (basically | umm | test | ahh)");
+		    ("Current Bad Words: (Good morning | basically | umm | test | ahh)");
 		
 		while (true) {
 		    System.out.println
@@ -93,11 +93,12 @@ public class HelloWorld {
 		    
 		    if (result != null) {
 			String resultText = result.getBestFinalResultNoFiller();
-			//String reT = result.getTimedBestResult(true, true); //testing words with time stamps
+			String reT = result.getTimedBestResult(true, true); //testing words with time stamps
 			System.out.println("You said: " + resultText + "\n");
 			//System.out.println(result.getFrameStatistics());
 			//new MKeyListener(); 
 			
+			System.out.println("== "+ reT);
 			count++; //counts bad words -> will add functionality to count individual bad words
 			UER(Integer.toString(count), resultText); //sends this to be printed
 		    
