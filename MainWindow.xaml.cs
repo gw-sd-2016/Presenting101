@@ -26,6 +26,7 @@ namespace KinectHandTracking
         KinectSensor _sensor;
         MultiSourceFrameReader _reader;
         IList<Body> _bodies;
+        float pL; 
 
         #endregion
 
@@ -104,7 +105,9 @@ namespace KinectHandTracking
                                 Joint thumbLeft = body.Joints[JointType.ThumbLeft];
 
                                 Joint leftShoulder = body.Joints[JointType.ShoulderRight];
-                                Joint rightShoulder = body.Joints[JointType.ShoulderLeft]; 
+                                Joint rightShoulder = body.Joints[JointType.ShoulderLeft];
+
+                                Joint pacer = body.Joints[JointType.SpineMid]; 
 
                                 // Draw hands and thumbs
                                 canvas.DrawHand(handRight, _sensor.CoordinateMapper);
@@ -119,14 +122,28 @@ namespace KinectHandTracking
                                 string leftshoulder = "-";
                                 string rightshoulder = "-";
                                 string upright = "-";
+                                string paceListener = "-";
+                              //  float pL = 0;
+                                float test = 0; 
                                 float ls = 0;
                                 float rs = 0;
                                 float ur = 0;
+                                //const float tpL ; 
                                 int cnt = 0;
-                                double tollerance = 0.010000; //TODO need to figure out a good tollerance
+                                double tollerance = 0.020000; //TODO need to figure out a good tollerance
+                                double paceTollerance = 0.100000; //Pacing tollerance for horizontal movement
+                                double pToll = 0.100000; //TODO play with these tollerances for better readings 
 				                //hand lasson counter
 
-                               
+
+                                pL  = pacer.Position.X;
+                            
+                                if((pacer.Position.X + paceTollerance < pToll) || (pacer.Position.X - paceTollerance > pToll )) //tracks pacing 
+                                {
+                                    test = pacer.Position.X; 
+                                }
+
+
                                 if ((leftShoulder.Position.Y + tollerance ) >= rightShoulder.Position.Y && (leftShoulder.Position.Y - tollerance) <= rightShoulder.Position.Y) 
                                 {
                                     //No Direction
@@ -193,9 +210,11 @@ namespace KinectHandTracking
                                // reCount.Text = cnt.ToString();
                                 tblRightHandState.Text = rightHandState;
                                 tblLeftHandState.Text = leftHandState;
-                                tbleftShoulder.Text = leftshoulder;
+                               // tbleftShoulder.Text = leftshoulder;
                                 tbrightShoulder.Text = rightshoulder;
-                                tbupright.Text = upright; 
+                               // tbupright.Text = upright;
+                                tbpl.Text = pL.ToString();
+                                tbtest.Text = test.ToString(); 
                                /* tbleftShoulder.Text = rs.ToString();
                                 tbrightShoulder.Text = ls.ToString();
                                 tbupright.Text = ur.ToString(); */ 
