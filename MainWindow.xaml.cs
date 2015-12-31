@@ -103,17 +103,49 @@ namespace KinectHandTracking
                                 Joint handLeft = body.Joints[JointType.HandLeft];
                                 Joint thumbLeft = body.Joints[JointType.ThumbLeft];
 
+                                Joint leftShoulder = body.Joints[JointType.ShoulderRight];
+                                Joint rightShoulder = body.Joints[JointType.ShoulderLeft]; 
+
                                 // Draw hands and thumbs
                                 canvas.DrawHand(handRight, _sensor.CoordinateMapper);
                                 canvas.DrawHand(handLeft, _sensor.CoordinateMapper);
                                 canvas.DrawThumb(thumbRight, _sensor.CoordinateMapper);
                                 canvas.DrawThumb(thumbLeft, _sensor.CoordinateMapper);
+                              
 
                                 // Find the hand states
                                 string rightHandState = "-";
                                 string leftHandState = "-";
-                                int cnt = 0; ; 
+                                string leftshoulder = "-";
+                                string rightshoulder = "-";
+                                string upright = "-";
+                                float ls = 0;
+                                float rs = 0;
+                                float ur = 0;
+                                int cnt = 0;
+                                double tollerance = 0.010000; //TODO need to figure out a good tollerance
 				                //hand lasson counter
+
+                               
+                                if ((leftShoulder.Position.Y + tollerance ) >= rightShoulder.Position.Y && (leftShoulder.Position.Y - tollerance) <= rightShoulder.Position.Y) 
+                                {
+                                    //No Direction
+                                    upright = "yep";
+                                    ur = leftShoulder.Position.Y + rightShoulder.Position.Y; 
+                                }
+                                else if (leftShoulder.Position.Y < rightShoulder.Position.Y)
+                                {
+                                    //leaning left
+                                    leftshoulder = "leaning right..";
+                                    rs = rightShoulder.Position.Y; 
+                                }
+                                else if (leftShoulder.Position.Y > rightShoulder.Position.Y)
+                                {
+                                    //leaning right
+                                    rightshoulder = "leaning left..";
+                                    ls = leftShoulder.Position.Y; 
+                                }
+
 				               
                                 switch (body.HandRightState)
                                 {
@@ -158,9 +190,15 @@ namespace KinectHandTracking
                                     default:
                                         break;
                                 }
-                                reCount.Text = cnt.ToString();
+                               // reCount.Text = cnt.ToString();
                                 tblRightHandState.Text = rightHandState;
                                 tblLeftHandState.Text = leftHandState;
+                                tbleftShoulder.Text = leftshoulder;
+                                tbrightShoulder.Text = rightshoulder;
+                                tbupright.Text = upright; 
+                               /* tbleftShoulder.Text = rs.ToString();
+                                tbrightShoulder.Text = ls.ToString();
+                                tbupright.Text = ur.ToString(); */ 
                             }
                         }
                     }
