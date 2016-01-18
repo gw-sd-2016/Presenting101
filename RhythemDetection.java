@@ -23,7 +23,9 @@ public class RhythemDetection {
     	
     	int uerCnt = 0; 
         //used to supply required and optional attributes to recognizer                  
-        Configuration configuration = new Configuration();
+        
+    	System.out.println("Loading...");
+    	Configuration configuration = new Configuration();
 
         configuration
                 .setAcousticModelPath("resources/edu/cmu/sphinx/models/en-us/en-us");
@@ -33,7 +35,7 @@ public class RhythemDetection {
                 .setLanguageModelPath("resources/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
      
         
-    /*
+    
      //gets live speech data 
      //should note that it is not accurate using it just for word detection and time signatures  
      LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
@@ -42,19 +44,24 @@ public class RhythemDetection {
      SpeechResult result = recognizer.getResult();
      // Pause recognition process. It can be resumed then with startRecognition(false).
     // recognizer.stopRecognition();
-     
+     System.out.println("Ready!");
+     WordResult s = null; 
      while ((result = recognizer.getResult()) != null) {
          System.out.format("#### New Hypothesis: %s\n", result.getHypothesis());
          
       // Get individual words and their times.
          for (WordResult r : result.getWords()) {
              System.out.println("t stamp: " + r);
+             s = r;
+             if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){ //TODO have a global average too 
+             	uerCnt++; 
+             }
          }
      }
      recognizer.stopRecognition();
      
-     */ 
-     
+    
+     /*
         //used this portion for testing: as this is a file it allows for consistency with results
         StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(
                 configuration);
@@ -72,11 +79,13 @@ public class RhythemDetection {
                 System.out.println("t stamp: " + r.getTimeFrame().getEnd()); //gets that actual time stamps of "words"
                 s = r; 
               //UER
-                if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){
+                if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){ //TODO have a global average too 
                 	uerCnt++; 
                 }
             }    
         }
         recognizer.stopRecognition();     
+        
+        */ 
     }
 }

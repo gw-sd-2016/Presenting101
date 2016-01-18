@@ -107,7 +107,11 @@ namespace KinectHandTracking
                                 Joint leftShoulder = body.Joints[JointType.ShoulderRight];
                                 Joint rightShoulder = body.Joints[JointType.ShoulderLeft];
 
-                                Joint pacer = body.Joints[JointType.SpineMid]; 
+                                Joint pacer = body.Joints[JointType.SpineMid];
+
+                                Joint leftHip = body.Joints[JointType.HipLeft];
+                                Joint rightHip = body.Joints[JointType.HipRight];
+
 
                                 // Draw hands and thumbs
                                 canvas.DrawHand(handRight, _sensor.CoordinateMapper);
@@ -128,6 +132,12 @@ namespace KinectHandTracking
                                 float ls = 0;
                                 float rs = 0;
                                 float ur = 0;
+
+                                float nleftHip = 0;
+                                float nrightHip = 0;
+                                float testHandright = 0;
+                                float testHandleft = 0; 
+
                                 //const float tpL ; 
                                 int cnt = 0;
                                 double tollerance = 0.020000; //TODO need to figure out a good tollerance
@@ -135,15 +145,17 @@ namespace KinectHandTracking
                                 double pToll = 0.100000; //TODO play with these tollerances for better readings 
 				                //hand lasson counter
 
+                              
 
-                                pL  = pacer.Position.X;
+                                /*---------------------------------------------Relational movement tracking------------------------------------*/
+                                pL  = pacer.Position.X; 
                             
                                 if((pacer.Position.X + paceTollerance < pToll) || (pacer.Position.X - paceTollerance > pToll )) //tracks pacing 
                                 {
                                     test = pacer.Position.X; 
                                 }
 
-
+                                /*-----------------------------------------------Lean tracking--------------------------------------------------*/
                                 if ((leftShoulder.Position.Y + tollerance ) >= rightShoulder.Position.Y && (leftShoulder.Position.Y - tollerance) <= rightShoulder.Position.Y) 
                                 {
                                     //No Direction
@@ -163,7 +175,47 @@ namespace KinectHandTracking
                                     ls = leftShoulder.Position.Y; 
                                 }
 
-				               
+                                ls = leftShoulder.Position.Y; 
+                                nleftHip = leftHip.Position.X;
+                                nrightHip = rightHip.Position.X; 
+                                testHandleft = handLeft.Position.Y;
+                                testHandright = handRight.Position.Y; 
+                               /*-------------------------------Hand Gesture tracking--------------------------------------*/
+                                    /*N.T.S: when tracking the hips and shoulders they are different x values and a tolerance should 
+                                     * be used to normalize the difference (if using both values prob will just use hips since more
+                                     * accurate with hand coordinates)*/
+                              //  testHandright = rightShoulder.Position.X; 
+
+                                //NTS these values will have to be within rather than simply less than or greater than
+                                /*
+                                if(testHandright <= nrightHip)
+                                {
+                                    //then right hand is within "the box"
+                                }
+                                if(testHandleft >= nleftHip)
+                                {
+                                    //then left hand is within "the box"
+                                }
+                                if (testHandright <= ls)
+                                {
+                                    //then right hand is within "the box" i.e below shoulders
+                                } 
+                                if (testHandleft <= rs)
+                                {
+                                    //then left hand is within "the box" below shoulders -> TODO need to double check values
+                                }
+                               
+                                if(testHandright <= nrightHip)
+                                {
+                                    //then right hand is within the box above the hip
+                                }
+                                if(testHandleft <= nleftHip)
+                                {
+                                    //then left hand is within the box i.e. above the hip
+                                }
+                                */ 
+
+				               /*-----------------------------------------Hand tracking------------------------------------*/
                                 switch (body.HandRightState)
                                 {
                                     case HandState.Open:
@@ -174,7 +226,7 @@ namespace KinectHandTracking
                                         break;
                                     case HandState.Lasso:
                                         rightHandState = "Lasso";
-					                    cnt++;
+					                  //  cnt++;
                                         break;
                                     case HandState.Unknown:
                                         rightHandState = "Unknown...";
@@ -211,13 +263,17 @@ namespace KinectHandTracking
                                 tblRightHandState.Text = rightHandState;
                                 tblLeftHandState.Text = leftHandState;
                                // tbleftShoulder.Text = leftshoulder;
-                                tbrightShoulder.Text = rightshoulder;
+                               // tbrightShoulder.Text = rightshoulder;
                                // tbupright.Text = upright;
-                                tbpl.Text = pL.ToString();
-                                tbtest.Text = test.ToString(); 
-                               /* tbleftShoulder.Text = rs.ToString();
-                                tbrightShoulder.Text = ls.ToString();
-                                tbupright.Text = ur.ToString(); */ 
+                              //---  tbpl.Text = pL.ToString();
+                              //---   tbtest.Text = test.ToString();
+                             //  tblh.Text = nleftHip.ToString();
+                               tbrh.Text = nrightHip.ToString();
+                               // tbhandl.Text = testHandleft.ToString();
+                                tbhandr.Text = testHandright.ToString(); 
+                               // tbleftShoulder.Text = rs.ToString();
+                               // tbrightShoulder.Text = ls.ToString();
+                               // tbupright.Text = ur.ToString();  
                             }
                         }
                     }
