@@ -82,7 +82,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	public SoundDetector() {
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Sound Detector");
+		this.setTitle("Volume Detection");
 		this.threshold = SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
 		this.tbd = SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
 		cnt =0; 
@@ -333,7 +333,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		
 		//test if the sound level goes above a threshhold 
 		if((int)(silenceDetector.currentSPL()) > -70){
-			//System.out.println("Went above -70");
+			System.out.println("Went above -70");
 			//System.out.println("THRESHOLD========" + tbd);
 		}
 		

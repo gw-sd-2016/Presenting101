@@ -219,10 +219,12 @@ namespace KinectHandTracking
                                 }
                                 */
 
+
+
                                 if ((testHandright <= ls)&&(testHandright <= nrightHip))
                                 {
                                     //right hand i.e below shoulders above hip
-                                    rflg = "rightinnnn"; 
+                                    rflg = "in"; 
                                 }
                                 else
                                 {

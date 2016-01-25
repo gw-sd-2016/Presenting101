@@ -17,11 +17,26 @@ import edu.cmu.sphinx.result.WordResult;
  * 
  * http://cmusphinx.sourceforge.net/wiki/tutorialsphinx4
  */
-public class RhythemDetection {       
+public class RhythemDetection {
+	public static int uerCnt; 
+	
+	public RhythemDetection(){
+		uerCnt = 0;
+	}
+		
+	public static void UER(int e){
+		System.out.println("Your speech has had " + e + "gaps in it");		
+		
+		//start of UER
+		if(e>6){ //need to have a timer for the course of the speech
+			System.out.println("You have had several gaps in your speech \n perhaps you should try to [suggestion]" );
+		}
+	}
+	
                          
     public static void main(String[] args) throws Exception {
     	
-    	int uerCnt = 0; 
+    	
         //used to supply required and optional attributes to recognizer                  
         
     	System.out.println("Loading...");
@@ -53,10 +68,11 @@ public class RhythemDetection {
          for (WordResult r : result.getWords()) {
              System.out.println("t stamp: " + r);
              s = r;
-             if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){ //TODO have a global average too 
-             	uerCnt++; 
+             if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){ //TODO have a global average too //if the time bewteen two words is greater than 1600
+             	uerCnt++;
              }
          }
+         UER(uerCnt); 
      }
      recognizer.stopRecognition();
      
