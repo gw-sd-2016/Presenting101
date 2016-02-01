@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Timers;
+using System.Collections;
 
 namespace KinectHandTracking
 {
@@ -26,7 +28,11 @@ namespace KinectHandTracking
         KinectSensor _sensor;
         MultiSourceFrameReader _reader;
         IList<Body> _bodies;
-        float pL; 
+        float pL;
+        private static System.Timers.Timer aTimer;
+        Boolean noMove;
+        int second = 0;
+        String nMove = ""; 
 
         #endregion
 
@@ -66,7 +72,18 @@ namespace KinectHandTracking
                 _sensor.Close();
             }
         }
+        void timer_Tick(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            second = second + 1;
+            if (second > 10) 
+            {
+                nMove = "woorksss"; 
+                noMove = true;
+                //aTimer.Enabled = false;
 
+            }
+            
+        }
         void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             var reference = e.FrameReference.AcquireFrame();
@@ -135,30 +152,63 @@ namespace KinectHandTracking
                                 float ls = 0;
                                 float rs = 0;
                                 float ur = 0;
+                                float lsx = 0; 
 
                                 float nleftHip = 0;
                                 float nrightHip = 0;
-                                float testHandright = 0;
-                                float testHandleft = 0; 
+                                float testHandrighty = 0;
+                                float testHandlefty = 0;
+                                float testHandrightx = 0;
+                                float testHandleftx = 0; 
 
                                 //const float tpL ; 
+                                int flag = 0; 
                                 int cnt = 0;
+                                float fin01 = 0;
+                                float fin02 = 0;
+                                float pt = .45000f;
+                                float pt2 = .1000f;
                                 double tollerance = 0.020000; //TODO need to figure out a good tollerance
-                                double paceTollerance = 0.100000; //Pacing tollerance for horizontal movement
+                                double paceTollerance = .1000;//0.100000; //Pacing tollerance for horizontal movement
                                 double pToll = 0.100000; //TODO play with these tollerances for better readings 
 				                //hand lasson counter
-
+                                
+                               
                               
 
                                 /*---------------------------------------------Relational movement tracking------------------------------------*/
-                                pL  = pacer.Position.X; 
-                            
+                             
+                                /* this is to fix the issue with pacing where there is a constantly changing value 
+                                ArrayList al = new ArrayList(); 
+
+                                pL  = pacer.Position.X;
+                                System.Timers.Timer aTimer = new System.Timers.Timer();
+                                nMove = "not pace";
+
+
+                                if (flag != 1)
+                                {
+                                    for (int j = 0; j < 2; j++)
+                                    {
+                                        pL = pacer.Position.X;
+                                        al.Add(pL); 
+                                        flag = 1; 
+                                    }
+                                }
+                                */
+
                                 if((pacer.Position.X + paceTollerance < pToll) || (pacer.Position.X - paceTollerance > pToll )) //tracks pacing 
                                 {
+                                    aTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
+                                    aTimer.Interval = 1000;
                                     test = pacer.Position.X;
-                                    pace = "pacing!"; 
+                                    nMove = "Pacing"; 
+                                    pace = "pacing!";
+                                    aTimer.Enabled = true;
 
                                 }
+                                
+                                //how long do they stay in that one place?
 
                                 /*-----------------------------------------------Lean tracking--------------------------------------------------*/
                                 if ((leftShoulder.Position.Y + tollerance ) >= rightShoulder.Position.Y && (leftShoulder.Position.Y - tollerance) <= rightShoulder.Position.Y) 
@@ -180,11 +230,16 @@ namespace KinectHandTracking
                                     ls = leftShoulder.Position.Y; 
                                 }
 
-                                ls = leftShoulder.Position.Y; 
+                                rs = rightShoulder.Position.X;  
+                                ls = leftShoulder.Position.Y;
+                                lsx = leftShoulder.Position.X; 
                                 nleftHip = leftHip.Position.X;
                                 nrightHip = rightHip.Position.X; 
-                                testHandleft = handLeft.Position.Y;
-                                testHandright = handRight.Position.Y; 
+                                testHandlefty = handLeft.Position.Y;
+                                testHandrighty = handRight.Position.Y;
+                                testHandleftx = handLeft.Position.X;
+                                testHandrightx = handRight.Position.X; 
+
                                /*-------------------------------Hand Gesture tracking--------------------------------------*/
                                     /*N.T.S: when tracking the hips and shoulders they are different x values and a tolerance should 
                                      * be used to normalize the difference (if using both values prob will just use hips since more
@@ -217,27 +272,28 @@ namespace KinectHandTracking
                                 {
                                     //then left hand is within the box i.e. above the hip
                                 }
-                                */
+                                //-------------------------- */
 
-
-
-                                if ((testHandright <= ls)&&(testHandright <= nrightHip))
+                                fin01 = rs + pt; //this creates the tollerance for horizontal movment of hand to make sure within the box 
+                                if ((testHandrighty <= ls)&&(testHandrightx <= fin01))//&&(testHandright<=lsx)//&&(testHandright <= nrightHip))
                                 {
-                                    //right hand i.e below shoulders above hip
-                                    rflg = "in"; 
+                                    //right hand is to the left of the shoulder and below the shoulder
+                                    //right hand i.e below shoulders above hip    testHandrightx <= fin //right hand is to left of rightshoulder
+                                    rflg = "Right in"; 
                                 }
                                 else
                                 {
-                                    rflg = "out"; 
+                                    rflg = "right out"; 
                                 }
-                                if ((testHandleft <= rs) && (testHandleft <= nleftHip))
+                                fin02 = ls - .1000f; 
+                                if ((testHandlefty <= rs) && (testHandleftx >= fin02))
                                 {
                                     //right hand i.e below shoulders above hip
-                                    lflg = "In";
+                                    lflg = "Left in";
                                 }
                                 else
                                 {
-                                     lflg = "out";
+                                     lflg = "Left out";
                                 }
 
 
@@ -267,9 +323,9 @@ namespace KinectHandTracking
                                {
                                    //then left hand is within the box i.e. above the hip
                                }
-                               */ 
+                               */
 
-				               /*-----------------------------------------Hand tracking------------------------------------*/
+                                /*-----------------------------------------Hand tracking------------------------------------*/
                                 switch (body.HandRightState)
                                 {
                                     case HandState.Open:
@@ -320,7 +376,7 @@ namespace KinectHandTracking
                                 tbrightShoulder.Text = rightshoulder;
                                // tbupright.Text = upright;
                               //---  tbpl.Text = pL.ToString();
-                                 tbtest.Text = pace;
+                                tbtest.Text = nMove; // pace;
                                  //tbtest.Text = test.ToString();
                              //  tblh.Text = nleftHip.ToString();
                                //tbrh.Text = nrightHip.ToString();
@@ -329,15 +385,16 @@ namespace KinectHandTracking
                                 //tbleftShoulder.Text = rs.ToString();
                                // tbrightShoulder.Text = ls.ToString();
                                // tbupright.Text = ur.ToString(); 
-                                 tbrflag.Text = rflg;
-                                 tblflag.Text = lflg; 
+                                 tbrflag.Text = rflg;// testHandleftx.ToString(); // rflg;
+
+                               //  fin02 = ls - .1000f; 
+                                 tblflag.Text = lflg; //fin02.ToString();  //lflg; 
                             }
                         }
                     }
                 }
             }
         }
-
         #endregion
     }
 }
