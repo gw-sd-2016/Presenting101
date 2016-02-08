@@ -15,12 +15,15 @@
 */
 
 
-package test;
+package retest;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -29,15 +32,19 @@ import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Mixer.Info;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
@@ -76,9 +83,19 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	private final GaphPanel graphPanel;
 	SilenceDetector silenceDetector;
 	private int avg, cnt, pnt;
-	
-	
+	Info test = Shared.getMixerInfo(false,true).get(0); 
+	Mixer nv =  AudioSystem.getMixer(test);
+	Mixer mix = null; 
+	JPanel inputPanel; 
 
+	private ActionListener setInput = new ActionListener(){
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+					SoundDetector.this.firePropertyChange("yes", mix, nv);
+					SoundDetector.this.mix = nv;
+				}
+		};
+	
 	public SoundDetector() {
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,15 +105,71 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		cnt =0; 
 		avg =0;
 		
-		JPanel inputPanel = new InputPanel();
-		//add(inputPanel);
 		
-		inputPanel.addPropertyChangeListener("mixer",
+		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
+		ButtonGroup group = new ButtonGroup();
+		
+		
+		inputPanel = new InputPanel();
+		//add(inputPanel);
+		inputPanel.setBorder(new TitledBorder ("test"));
+		
+		/*
+		inputPanel = new JPanel(new GridLayout(0,1));
+		JRadioButton button = new JRadioButton();
+		button.setText(Shared.toLocalString(test));
+		buttonPanel.add(button);
+		group.add(button);
+		button.setActionCommand(test.toString());
+		inputPanel.add(new JScrollPane(buttonPanel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),BorderLayout.CENTER);
+		
+		button.addActionListener(setInput);
+		*/
+		
+		//button.setSelected(true);
+		Shared.getMixerInfo(false, true); 
+		
+		
+		
+		
+			System.out.println("&& " + //info.toString());
+			Shared.getMixerInfo(false,true).get(0)); 
+		
+		//this.firePropertyChange("mixer", mixer, newValue);
+			
+		
+			/*
+			inputPanel.addPropertyChangeListener("nv", 
+					new PropertyChangeListener() {
+						@Override
+						public void propertyChange(PropertyChangeEvent arg0) {
+							try {
+								
+								setNewMixer(nv);
+								//System.out.println("###!!"  + arg0);
+								//com.sun.media.sound.DirectAudioDevice@74b21e6a
+							} catch (LineUnavailableException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (UnsupportedAudioFileException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+		*/
+			
+		//	inputPanel.addPropertyChangeListener(propertyName, listener);
+		
+		
+			inputPanel.addPropertyChangeListener("no", 
 				new PropertyChangeListener() {
 					@Override
 					public void propertyChange(PropertyChangeEvent arg0) {
 						try {
-							setNewMixer((Mixer) arg0.getNewValue());
+							setNewMixer(nv);
+							//System.out.println("###!!"  + arg0);
+							//com.sun.media.sound.DirectAudioDevice@74b21e6a
 						} catch (LineUnavailableException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -107,19 +180,21 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 					}
 				});
 		
-				
+			
+			
 		//JSlider thresholdSlider = initialzeThresholdSlider();		
-		JPanel params = new JPanel(new BorderLayout());
+		//JPanel params = new JPanel(new BorderLayout());
+		
 		//params.setBorder(new TitledBorder("2. Set the algorithm parameters"));
 		
 		JLabel label = new JLabel("");
 		label.setToolTipText("Energy level when sound is counted (dB SPL).");
-		params.add(label,BorderLayout.NORTH);
+	//	params.add(label,BorderLayout.NORTH);
 		//params.add(thresholdSlider,BorderLayout.CENTER);
 		
 		JPanel inputAndParamsPanel = new JPanel(new BorderLayout());
 		inputAndParamsPanel.add(inputPanel,BorderLayout.NORTH);
-		inputAndParamsPanel.add(params,BorderLayout.SOUTH);
+		//inputAndParamsPanel.add(params,BorderLayout.SOUTH);
 
 		
 		JPanel panelWithTextArea = new JPanel(new BorderLayout());
@@ -135,6 +210,10 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		graphPanel.setSize(80,100);
 		add(graphPanel,BorderLayout.CENTER);
 	}
+
+	
+	
+	
 	
 	private static class GaphPanel extends JPanel{
 
@@ -253,6 +332,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		
 		//return thresholdSlider;
 	//}
+	
 
 	private void setNewMixer(Mixer mixer) throws LineUnavailableException,
 			UnsupportedAudioFileException {
@@ -260,20 +340,28 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		if(dispatcher!= null){
 			dispatcher.stop();
 		}
-		currentMixer = mixer;
+		//currentMixer = mixer;
+		
 		
 		float sampleRate = 44100;
 		int bufferSize = 512;
 		int overlap = 0;
+	
 		
-		textArea.append("Started listening with " + Shared.toLocalString(mixer.getMixerInfo().getName()) + "\n\tparams: " + threshold + "dB\n");
-
+		
+		
+		textArea.append("Started listening with " + Shared.toLocalString(nv.getMixerInfo().getName()) + "\n\tparams: " + threshold + "dB\n");
+		
+		if(nv.getMixerInfo().getName().equals("Primary Sound Capture Driver")){
+			System.out.println("dsjhfalkdjhflkjahsdlkj");
+		}
+		
 		final AudioFormat format = new AudioFormat(sampleRate, 16, 1, true,
 				true);
 		final DataLine.Info dataLineInfo = new DataLine.Info(
 				TargetDataLine.class, format);
 		TargetDataLine line;
-		line = (TargetDataLine) mixer.getLine(dataLineInfo);
+		line = (TargetDataLine) nv.getLine(dataLineInfo);
 		final int numberOfSamples = bufferSize;
 		line.open(format, numberOfSamples);
 		line.start();
