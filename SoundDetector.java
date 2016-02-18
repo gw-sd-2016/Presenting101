@@ -86,15 +86,26 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	Info test = Shared.getMixerInfo(false,true).get(0); 
 	Mixer nv =  AudioSystem.getMixer(test);
 	Mixer mix = null; 
-	JPanel inputPanel; 
+	//JPanel inputPanel; 
 
 
 	
 	public SoundDetector() throws LineUnavailableException {
+		//super();
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Sound Detector");
 		this.threshold = SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
+		JPanel inputPanel = new InputPanel();
+		inputPanel.setBorder(new TitledBorder ("test"));
+		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
+		ButtonGroup group = new ButtonGroup();
+		JRadioButton button = new JRadioButton();
+		button.setText("kjhgk");
+		buttonPanel.add(button);
+		group.add(button);
+		
+		
 		/*
 		JPanel inputPanel = new InputPanel();
 		this.setLayout(new BorderLayout());
@@ -110,9 +121,9 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		//ButtonGroup group = new ButtonGroup();
 		
 		
-		inputPanel = new InputPanel();
+		//inputPanel = new InputPanel();
 		//add(inputPanel);
-		inputPanel.setBorder(new TitledBorder ("test"));
+		
 		
 		/*
 		inputPanel = new JPanel(new GridLayout(0,1));
@@ -231,7 +242,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		//params.add(thresholdSlider,BorderLayout.CENTER);
 		
 		JPanel inputAndParamsPanel = new JPanel(new BorderLayout());
-		inputAndParamsPanel.add(inputPanel,BorderLayout.NORTH);
+		//inputAndParamsPanel.add(inputPanel,BorderLayout.NORTH);
 		//inputAndParamsPanel.add(params,BorderLayout.SOUTH);
 
 		
@@ -429,12 +440,24 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		//*/ 
 	}
 
-	public static void main(String... strings) throws LineUnavailableException {
-		JFrame frame = new SoundDetector();
+	public static void main(String... strings)  throws InterruptedException,
+	InvocationTargetException {
+		SwingUtilities.invokeAndWait(new Runnable() {
+	@Override
+	public void run() {
+		JFrame frame = null;
+		try {
+			frame = new SoundDetector();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		frame.pack();
 		frame.setSize(640,480);
-		frame.setVisible(true);//throws InterruptedException,
+		frame.setVisible(true);
 	}
+});
+}
 	/*
 			InvocationTargetException {
 		SwingUtilities.invokeAndWait(new Runnable() {
