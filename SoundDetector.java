@@ -88,15 +88,15 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	Mixer mix = null; 
 	JPanel inputPanel; 
 
-	private ActionListener setInput = new ActionListener(){
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-					SoundDetector.this.firePropertyChange("yes", mix, nv);
-					SoundDetector.this.mix = nv;
-				}
-		};
+
 	
-	public SoundDetector() {
+	public SoundDetector() throws LineUnavailableException {
+		this.setLayout(new BorderLayout());
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setTitle("Sound Detector");
+		this.threshold = SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
+		/*
+		JPanel inputPanel = new InputPanel();
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Volume Detection");
@@ -104,10 +104,10 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		this.tbd = SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
 		cnt =0; 
 		avg =0;
+		*/ 
 		
-		
-		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
-		ButtonGroup group = new ButtonGroup();
+		//JPanel buttonPanel = new JPanel(new GridLayout(0,1));
+		//ButtonGroup group = new ButtonGroup();
 		
 		
 		inputPanel = new InputPanel();
@@ -161,13 +161,14 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 			
 		//	inputPanel.addPropertyChangeListener(propertyName, listener);
 		
-		
-			inputPanel.addPropertyChangeListener("no", 
+			/*
+			inputPanel.addPropertyChangeListener("mixer", 
 				new PropertyChangeListener() {
 					@Override
 					public void propertyChange(PropertyChangeEvent arg0) {
 						try {
-							setNewMixer(nv);
+							
+							setNewMixer());
 							//System.out.println("###!!"  + arg0);
 							//com.sun.media.sound.DirectAudioDevice@74b21e6a
 						} catch (LineUnavailableException e) {
@@ -180,7 +181,44 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 					}
 				});
 		
+			*/
 			
+			
+			//---------------
+			if(dispatcher!= null){
+				dispatcher.stop();
+			}
+			int bufferSize = 512;
+			int overlap = 0;
+
+			
+			
+			final AudioFormat format = new AudioFormat(44100f, 16, 1, true,
+					true);
+			final DataLine.Info dataLineInfo = new DataLine.Info(
+					TargetDataLine.class, format);
+			TargetDataLine line;
+			line = (TargetDataLine) nv.getLine(dataLineInfo);
+			final int numberOfSamples = bufferSize;
+			//line.open(format, numberOfSamples);
+			line.open(format, numberOfSamples);
+			line.start();
+			
+			final AudioInputStream stream = new AudioInputStream(line);
+			JVMAudioInputStream audioStream = new JVMAudioInputStream(stream);
+			// create a new dispatcher
+			dispatcher = new AudioDispatcher(audioStream, bufferSize,
+					overlap);
+
+			// add a processor, handle percussion event.
+			silenceDetector = new SilenceDetector(threshold,false);
+			dispatcher.addAudioProcessor(silenceDetector);
+			dispatcher.addAudioProcessor(this);
+
+			// run the dispatcher (on a new thread).
+			new Thread(dispatcher,"Audio dispatching").start();
+			
+			//---------------
 			
 		//JSlider thresholdSlider = initialzeThresholdSlider();		
 		//JPanel params = new JPanel(new BorderLayout());
@@ -334,7 +372,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	//}
 	
 
-	private void setNewMixer(Mixer mixer) throws LineUnavailableException,
+	private void setNewMixer() throws LineUnavailableException,
 			UnsupportedAudioFileException {
 		
 		if(dispatcher!= null){
@@ -347,14 +385,22 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		int bufferSize = 512;
 		int overlap = 0;
 	
-		
-		
+		/*
+		final AudioFormat format00 = new AudioFormat(44100f, 16, 1, true,true);
+		TargetDataLine tdl = AudioSystem.getTargetDataLine(format00);
+		final DataLine.Info infoIN = new DataLine.Info(TargetDataLine.class, format00);
+		tdl = (TargetDataLine) nv.getLine(infoIN); //AudioSystem.getLine(infoIN);
+		tdl.open(format00);
+		//tdl.start();
+		new Thread(dispatcher,"Audio dispatching").start();
+		*/
 		
 		textArea.append("Started listening with " + Shared.toLocalString(nv.getMixerInfo().getName()) + "\n\tparams: " + threshold + "dB\n");
 		
 		if(nv.getMixerInfo().getName().equals("Primary Sound Capture Driver")){
 			System.out.println("dsjhfalkdjhflkjahsdlkj");
 		}
+		
 		
 		final AudioFormat format = new AudioFormat(sampleRate, 16, 1, true,
 				true);
@@ -363,6 +409,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		TargetDataLine line;
 		line = (TargetDataLine) nv.getLine(dataLineInfo);
 		final int numberOfSamples = bufferSize;
+		//line.open(format, numberOfSamples);
 		line.open(format, numberOfSamples);
 		line.start();
 		final AudioInputStream stream = new AudioInputStream(line);
@@ -379,9 +426,16 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 
 		// run the dispatcher (on a new thread).
 		new Thread(dispatcher,"Audio dispatching").start();
+		//*/ 
 	}
 
-	public static void main(String... strings) throws InterruptedException,
+	public static void main(String... strings) throws LineUnavailableException {
+		JFrame frame = new SoundDetector();
+		frame.pack();
+		frame.setSize(640,480);
+		frame.setVisible(true);//throws InterruptedException,
+	}
+	/*
 			InvocationTargetException {
 		SwingUtilities.invokeAndWait(new Runnable() {
 			@Override
@@ -392,7 +446,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 				frame.setVisible(true);
 			}
 		});
-	}
+	}*/ 
 
 	@Override
 	public boolean process(AudioEvent audioEvent) {
