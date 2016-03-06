@@ -25,7 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-
+ 
 /**
  * A simple demo showing a simple speech application recognition
  * built using Sphinx-4. This application uses the Sphinx-4 endpointer,
@@ -41,90 +41,115 @@ import java.net.URL;
  * Terrence Lewis
  * */
 public class HelloWorld {
-
+	int umm, ahh, basically; 
+	
+	public HelloWorld(String[] args) throws Exception{
+		umm = 0; 
+		ahh = 0; 
+		basically = 0; 
+		badWords(args);
+				
+	}
 	
 	//beginnings of the user error report for bad word detection
 	public static void UER(String e, String i){
 		
 		System.out.println("You've said a total of " + e + " bad words" );		
+		//System.out.println("You've said umm " + e + " times" );
+		
+		//write to a file and then from the ui have it read the last 3 or so lines for the 
+		//total number of bad words and how many of each bad words was said
 	}
 	
 
     /**
      * Main method for running the HelloWorld demo.
      */
-    public static void main(String[] args) {
-        try {
-            URL url;
-            if (args.length > 0) {
-                url = new File(args[0]).toURI().toURL();
-            } else {
-                url = HelloWorld.class.getResource("helloworld.config.xml");
-            }
+	
+	public void badWords(String[] args){
+		 try {
+	            URL url;
+	            if (args.length > 0) {
+	                url = new File(args[0]).toURI().toURL();
+	            } else {
+	                url = HelloWorld.class.getResource("helloworld.config.xml");
+	            }
 
-            System.out.println("Loading...");
+	            System.out.println("Loading3...");
 
-            ConfigurationManager cm = new ConfigurationManager(url);
+	            ConfigurationManager cm = new ConfigurationManager(url);
 
-	    Recognizer recognizer = (Recognizer) cm.lookup("recognizer");
-	    Microphone microphone = (Microphone) cm.lookup("microphone");
+		    Recognizer recognizer = (Recognizer) cm.lookup("recognizer");
+		    Microphone microphone = (Microphone) cm.lookup("microphone");
 
 
-            /* allocate the resource necessary for the recognizer */
-            recognizer.allocate();
+	            // allocate the resource necessary for the recognizer 
+	            recognizer.allocate();
 
-            /* the microphone will keep recording until the program exits */
-	    if (microphone.startRecording()) {
-	    	int count =0; 
-	    //to look for these words the .gram file must be modified
-		System.out.println
-		    ("Current Bad Words: (Good morning | basically | umm | test | ahh)");
-		
-		while (true) {
-		    System.out.println
-			("Start speaking. \n");
-		    
-                    /*
-                     * This method will return when the end of speech
-                     * is reached. Note that the endpointer will determine
-                     * the end of speech.
-                     */ 
-		    Result result = recognizer.recognize();
-		    
-		    if (result != null) {
-			String resultText = result.getBestFinalResultNoFiller();
-			String reT = result.getTimedBestResult(true, true); //testing words with time stamps
-			System.out.println("You said: " + resultText + "\n");
-			//System.out.println(result.getFrameStatistics());
-			//new MKeyListener(); 
+	            // the microphone will keep recording until the program exits 
+		    if (microphone.startRecording()) {
+		    	int count =0; 
+		    //to look for these words the .gram file must be modified
+			System.out.println
+			    ("Current Bad Words: (Good morning | basically | umm | test | ahh)");
 			
-			System.out.println("== "+ reT);
-			count++; //counts bad words -> will add functionality to count individual bad words
-			UER(Integer.toString(count), resultText); //sends this to be printed
-		    
-			
-			new KeyListenerExample(); 
+			while (true) {
+			    System.out.println
+				("Start speaking. \n");
+			    
+	                     //
+	                     // This method will return when the end of speech
+	                     // is reached. Note that the endpointer will determine
+	                     // the end of speech.
+	                     
+			    Result result = recognizer.recognize();
+			    
+			    if (result != null) {
+				String resultText = result.getBestFinalResultNoFiller();
+				String reT = result.getTimedBestResult(true, true); //testing words with time stamps
+				System.out.println("You said: " + resultText + "\n");
+				//System.out.println(result.getFrameStatistics());
+				//new MKeyListener(); 
+				
+				System.out.println("== "+ reT);
+				count++; //counts bad words -> will add functionality to count individual bad words
+				if(resultText.equals("umm")){
+					umm++;
+				}
+				else if(resultText.equals("ahh")){
+					ahh++;
+				}
+				else if(resultText.equals("basically")){
+					basically++; 
+				}
+				UER(Integer.toString(count), resultText); //sends this to be printed
+			    
+				
+				new KeyListenerExample(); 
+			    } else {
+				System.out.println("I can't hear what you said.\n");
+			    }
+			}
 		    } else {
-			System.out.println("I can't hear what you said.\n");
+			System.out.println("Cannot start microphone.");
+			recognizer.deallocate();
+			System.exit(1);
 		    }
-		}
-	    } else {
-		System.out.println("Cannot start microphone.");
-		recognizer.deallocate();
-		System.exit(1);
-	    }
-        } catch (IOException e) {
-            System.err.println("Problem when loading HelloWorld: " + e);
-            e.printStackTrace();
-        } catch (PropertyException e) {
-            System.err.println("Problem configuring HelloWorld: " + e);
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            System.err.println("Problem creating HelloWorld: " + e);
-            e.printStackTrace();
-        }
-        
-    }
+	        } catch (IOException e) {
+	            System.err.println("Problem when loading HelloWorld: " + e);
+	            e.printStackTrace();
+	        } catch (PropertyException e) {
+	            System.err.println("Problem configuring HelloWorld: " + e);
+	            e.printStackTrace();
+	        } catch (InstantiationException e) {
+	            System.err.println("Problem creating HelloWorld: " + e);
+	            e.printStackTrace();
+	        }
+	        
+	   
+	} 
+    public static void main(String[] args) throws Exception {
+      new HelloWorld(args); 
 }
 
 
@@ -152,4 +177,4 @@ public void keyTyped(KeyEvent e) {
    };
   
 
-}
+}}
