@@ -1,6 +1,9 @@
+package workinRhythm;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;
@@ -20,26 +23,13 @@ import edu.cmu.sphinx.result.WordResult;
 public class RhythemDetection {
 	public static int uerCnt; 
 	
-	public RhythemDetection(){
+	public RhythemDetection() throws Exception{
 		uerCnt = 0;
+		Rdet(); 
 	}
 		
-	public static void UER(int e){
-		System.out.println("Your speech has had " + e + "gaps in it");		
-		
-		//start of UER
-		if(e>6){ //need to have a timer for the course of the speech
-			System.out.println("You have had several gaps in your speech \n perhaps you should try to [suggestion]" );
-		}
-	}
-	
-                         
-    public static void main(String[] args) throws Exception {
-    	
-    	
-        //used to supply required and optional attributes to recognizer                  
-        
-    	System.out.println("Loading...");
+	public void Rdet() throws Exception{
+		System.out.println("Loading 648...");
     	Configuration configuration = new Configuration();
 
         configuration
@@ -61,47 +51,70 @@ public class RhythemDetection {
     // recognizer.stopRecognition();
      System.out.println("Ready!");
      WordResult s = null; 
+     ArrayList<Integer> tStamp = new ArrayList<Integer>();
+     int lastEntry = 0; //this is to be used for detecting gaps between two sentences i.e the end of one & start of another
+     boolean started = false; 
      while ((result = recognizer.getResult()) != null) {
          System.out.format("#### New Hypothesis: %s\n", result.getHypothesis());
          
       // Get individual words and their times.
          for (WordResult r : result.getWords()) {
-             System.out.println("t stamp: " + r);
+             System.out.println("t stamp: " + r + r.getTimeFrame().getEnd());
+             
              s = r;
-             if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){ //TODO have a global average too //if the time bewteen two words is greater than 1600
-             	uerCnt++;
-             }
+             int t = (int) r.getTimeFrame().getEnd(); 
+             tStamp.add(t); 
+             System.out.println("#### " + (r.getTimeFrame().getEnd()-s.getTimeFrame().getEnd()));
+            if(started){
+            	if((tStamp.get(0)-lastEntry)>4000){ //this checks the end of one sentence and start of another
+            		System.out.println("you are taking to many pauses: "+ (tStamp.get(0)-lastEntry));
+            	}
+            }
+        
+             if(tStamp.size()>2){ //need a case for just one word said
+            	 for(int i=0; i<tStamp.size()-1; i++){
+            	
+            		 if((tStamp.get(i+1))-(tStamp.get(i))<100){
+            			 System.out.println("greater than 300"); //talking too fast
+            		 }
+            		 else if((tStamp.get(i+1))-(tStamp.get(i))>110 && (tStamp.get(i+1))-(tStamp.get(i))<899){
+            			 System.out.println("You are talking right speed"); //talking right speed
+            		 }
+            		 else if((tStamp.get(i+1))-(tStamp.get(i))>900){
+            			 System.out.println("you are talking to slow"); //talking to slowly
+            			 uerCnt++; 
+            		 }
+            	 }
+            }
+            // if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){ //TODO have a global average too //if the time bewteen two words is greater than 1600
+             //uerCnt++;
+             //}
          }
+         
+         System.out.println("First entry " + tStamp.get(0) + " last entry " + tStamp.get(tStamp.size()-1)); 
+         lastEntry = tStamp.get(tStamp.size()-1);
+         started = true; 
+         tStamp.clear();
          UER(uerCnt); 
      }
      recognizer.stopRecognition();
-     
-    
-     /*
-        //used this portion for testing: as this is a file it allows for consistency with results
-        StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(
-                configuration);
-        InputStream stream = new FileInputStream(new File("rec_10s.wav"));
-
-        recognizer.startRecognition(stream);
-        SpeechResult result = null;
-        WordResult s = null; 
-         
-        
-        while ((result = recognizer.getResult()) != null) {
-            System.out.format("Hypothesis: %s\n", result.getHypothesis());
-          
-            for (WordResult r : result.getWords()) {
-                System.out.println("t stamp: " + r.getTimeFrame().getEnd()); //gets that actual time stamps of "words"
-                s = r; 
-              //UER
-                if((s.getTimeFrame().getEnd()-s.getTimeFrame().getEnd())>1600){ //TODO have a global average too 
-                	uerCnt++; 
-                }
-            }    
-        }
-        recognizer.stopRecognition();     
-        
-        */ 
+	
+	}
+	
+	
+	public static void UER(int e){
+		System.out.println("Your speech has had " + e + "gaps in it");		
+		
+		//start of UER
+		if(e>6){ //need to have a timer for the course of the speech
+			System.out.println("You have had several gaps in your speech \n perhaps you should try to [suggestion]" );
+		}
+	}
+	
+                         
+    public static void main(String[] args) throws Exception {
+    	new RhythemDetection(); 
+    	
+        //used to supply required and optional attributes to recognizer                  
     }
 }
