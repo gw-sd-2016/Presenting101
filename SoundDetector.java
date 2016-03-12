@@ -29,6 +29,8 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -82,20 +84,22 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	Mixer currentMixer;
 	private final GaphPanel graphPanel;
 	SilenceDetector silenceDetector;
-	private int avg, cnt, pnt;
+	private int avg, cnt, pnt, belowThresh;
 	Info test = Shared.getMixerInfo(false,true).get(0); 
 	Mixer nv =  AudioSystem.getMixer(test);
 	Mixer mix = null; 
 	//JPanel inputPanel; 
-
+	boolean notStarted; 
+	long elapsedSeconds, startTime, elapsedTime ; 
+	Timer timer; 
 
 	
 	public SoundDetector() throws LineUnavailableException {
-		//super();
+		startTime = System.currentTimeMillis();
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Sound Detector");
-		this.threshold = SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
+		this.threshold = -60.0; //SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
 		JPanel inputPanel = new InputPanel();
 		inputPanel.setBorder(new TitledBorder ("test"));
 		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
@@ -104,7 +108,8 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		button.setText("kjhgk");
 		buttonPanel.add(button);
 		group.add(button);
-		
+		belowThresh = 0 ; 
+		notStarted = false; 
 		
 		/*
 		JPanel inputPanel = new InputPanel();
@@ -480,7 +485,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	
 	//important function - handles what happens when sound is above or below a threshold and what is printed (for testing) 
 	private void handleSound(){
-	 
+				
 		if(silenceDetector.currentSPL() > threshold){
 			//textArea.append("Sound detected at:" + System.currentTimeMillis() + ", " + (int)(silenceDetector.currentSPL()) + "dB SPL\n");
 			textArea.append("Decibel level:" + (int)(silenceDetector.currentSPL()) + "dB SPL\n");
@@ -498,11 +503,44 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		
 		//test if the sound level goes above a threshhold 
 		if((int)(silenceDetector.currentSPL()) > -70){
-			System.out.println("Went above -70");
+			//System.out.println("Went above " + threshold);
 			//System.out.println("THRESHOLD========" + tbd);
 		}
 		
+		
+	
+	
+		/*
+		
+		if((int)(silenceDetector.currentSPL())< threshold){
+			 timer = new Timer(true);
+			 timer.schedule(new CrunchifyReminder(), 1000);
+			elapsedTime = System.currentTimeMillis() - startTime;
+		//	belowThresh++; //went below the threshold 
+		}
+
+		*/
+				
+		if(pnt<58){ //if the average loudness is below 58 db
+			//constantly speaking low
+		}
+		
+		/*
+		if(!notStarted){
+			 try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
+		if(belowThresh>8){
+			System.out.println("##########################################");
+		}
+		*/ 
+		notStarted = true; 
 	}
+	
 	
 	
 	@Override
