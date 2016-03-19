@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Timers;
 using System.Collections;
+using System.Threading;
 
 namespace KinectHandTracking
 {
@@ -32,7 +33,16 @@ namespace KinectHandTracking
         private static System.Timers.Timer aTimer;
         Boolean noMove;
         int second = 0;
-        String nMove = ""; 
+        String nMove = "";
+        int rightLean = 0;
+        int leftLean = 0;
+        int rigtHandUP = 0;
+        int rightHandRight = 0; 
+        int leftHandUP = 0;
+        int leftHandLeft = 0;
+        int paceUER = 0;
+        String print = "";
+        String p2 = ""; 
 
         #endregion
 
@@ -144,7 +154,7 @@ namespace KinectHandTracking
                                 string rightshoulder = "-";
                                 string upright = "-";
                                 string paceListener = "-";
-                                string pace = "not pacing";
+                                string pace = "-";
                                 string rflg = "##";
                                 string lflg = "##"; 
                               //  float pL = 0;
@@ -171,6 +181,8 @@ namespace KinectHandTracking
                                 double tollerance = 0.020000; //TODO need to figure out a good tollerance
                                 double paceTollerance = .1000;//0.100000; //Pacing tollerance for horizontal movement
                                 double pToll = 0.100000; //TODO play with these tollerances for better readings 
+                               
+          
 				                //hand lasson counter
                                 
                                
@@ -199,12 +211,13 @@ namespace KinectHandTracking
 
                                 if((pacer.Position.X + paceTollerance < pToll) || (pacer.Position.X - paceTollerance > pToll )) //tracks pacing 
                                 {
-                                    aTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
-                                    aTimer.Interval = 1000;
+                                   // aTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
+                                   // aTimer.Interval = 1000;
                                     test = pacer.Position.X;
-                                    nMove = "Pacing"; 
+                                    nMove = "Pacing++"; 
                                     pace = "pacing!";
-                                    aTimer.Enabled = true;
+                                    paceUER++; 
+                                   // aTimer.Enabled = true;
 
                                 }
                                 
@@ -222,12 +235,14 @@ namespace KinectHandTracking
                                     //leaning left
                                     leftshoulder = "leaning right..";
                                     rs = rightShoulder.Position.Y; 
+                                    rightLean++; 
                                 }
                                 else if (leftShoulder.Position.Y > rightShoulder.Position.Y)
                                 {
                                     //leaning right
                                     rightshoulder = "leaning left..";
-                                    ls = leftShoulder.Position.Y; 
+                                    ls = leftShoulder.Position.Y;
+                                    leftLean++;
                                 }
 
                                 rs = rightShoulder.Position.X;  
@@ -283,7 +298,8 @@ namespace KinectHandTracking
                                 }
                                 else
                                 {
-                                    rflg = "right out"; 
+                                    rflg = "right out";
+                                    rightHandRight++; 
                                 }
                                 fin02 = ls - .1000f; 
                                 if ((testHandlefty <= rs) && (testHandleftx >= fin02))
@@ -294,6 +310,7 @@ namespace KinectHandTracking
                                 else
                                 {
                                      lflg = "Left out";
+                                     leftHandLeft++; 
                                 }
 
 
@@ -376,7 +393,7 @@ namespace KinectHandTracking
                                 tbrightShoulder.Text = rightshoulder;
                                // tbupright.Text = upright;
                               //---  tbpl.Text = pL.ToString();
-                                tbtest.Text = nMove; // pace;
+                                tbtest.Text = pace; //nMove; // pace;
                                  //tbtest.Text = test.ToString();
                              //  tblh.Text = nleftHip.ToString();
                                //tbrh.Text = nrightHip.ToString();
@@ -389,6 +406,20 @@ namespace KinectHandTracking
 
                                //  fin02 = ls - .1000f; 
                                  tblflag.Text = lflg; //fin02.ToString();  //lflg; 
+
+                               
+
+                                print = rightHandRight.ToString();
+                                
+                                /*
+                                 * Will write data to a file and then will go back to that file to read it to create the UER
+                                 */
+
+                                 System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", print);
+                                 Thread.Sleep(1); 
+                                 System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", p2);
+                                 Thread.Sleep(1);
+                            
                             }
                         }
                     }
