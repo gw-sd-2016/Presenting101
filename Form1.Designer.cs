@@ -59,6 +59,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -186,6 +187,7 @@
             this.progressBar2.Name = "progressBar2";
             this.progressBar2.Size = new System.Drawing.Size(220, 23);
             this.progressBar2.TabIndex = 1;
+            this.progressBar2.Click += new System.EventHandler(this.progressBar2_Click);
             // 
             // label12
             // 
@@ -364,6 +366,10 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // timer2
+            // 
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,6 +421,7 @@
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.ProgressBar progressBar2;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 
