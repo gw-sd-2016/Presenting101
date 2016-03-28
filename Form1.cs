@@ -111,9 +111,12 @@ namespace UIv2
              if ((progressBar2.Value == progressBar2.Maximum) && (count==0))
             {
                 Process.Start(@"C:\Users\tlewis\Desktop\KinectHandTracking\KinectHandTracking\bin\Debug\KinectHandTracking.exe");
-                count = 1; 
+                count = 1;
+                Thread.Sleep(3000);
+                tabControl1.SelectTab(2);
             }
         }
+
     }
 
     public class Thread2

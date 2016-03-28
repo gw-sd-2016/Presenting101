@@ -9,21 +9,14 @@
                 <Canvas Name="canvas" Margin="-78,0,78,0" />
             </Grid>
         </Viewbox>
-        <Grid Style="{StaticResource ContainerStyle}" Width="698">
+        <Grid Style="{StaticResource ContainerStyle}" Width="1109" Opacity="0.7">
             <StackPanel Margin="20">
                 <StackPanel>
-                    <TextBlock Text="Right hand state:" Style="{StaticResource TitleStyle}" />
-                    <TextBlock Name="tbrflag" Text="-" Style="{StaticResource StateStyle}" />
+                    <TextBlock Name="tbrflag" Text="" Style="{StaticResource StateStyle}" />
                 </StackPanel>
-                <StackPanel Margin="0,50,0,0">
-                    <TextBlock Text="Left hand state:" Style="{StaticResource TitleStyle}" />
-                    <TextBlock Name="tblflag" Text="-" Style="{StaticResource StateStyle}" />
-                </StackPanel>
-                <StackPanel Margin="0,50,0,0">
-                    <TextBlock Text="Lean Left:" Style="{StaticResource TitleStyle}" />
-                    <TextBlock Name="tbrightShoulder" Text="-" Style="{StaticResource StateStyle}" />
-                </StackPanel>
-                
+                <StackPanel Margin="0,50,0,0"/>
+                <StackPanel Margin="0,50,0,0"/>
+
                 <!--<StackPanel Margin="0,50,0,0">
                     <TextBlock Text="Lean Right:" Style="{StaticResource TitleStyle}" />
                     <TextBlock Name="tbleftShoulder" Text="-" Style="{StaticResource StateStyle}" />
@@ -35,18 +28,14 @@
                 </StackPanel> -->
 
                 <StackPanel Margin="0,50,0,0">
-                    <TextBlock Text="leaning right:" Style="{StaticResource TitleStyle}" />
-                    <TextBlock Name="tbleftShoulder" Text="-" Style="{StaticResource StateStyle}" />
+                    <TextBlock Name="tbleftShoulder" Text="" Style="{StaticResource StateStyle}" />
                 </StackPanel>
 
                 
-                <StackPanel Margin="0,50,0,0">
-                    <TextBlock Text="pacing:" Style="{StaticResource TitleStyle}" />
-                    <TextBlock Name="tbtest" Text="-" Style="{StaticResource StateStyle}" />
-                </StackPanel>
-                
-                
-                
+                <StackPanel Margin="0,50,0,0"/>
+
+
+
             </StackPanel>
            
         </Grid>

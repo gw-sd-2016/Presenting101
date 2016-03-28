@@ -148,15 +148,19 @@ namespace KinectHandTracking
                               
 
                                 // Find the hand states
-                                string rightHandState = "-";
-                                string leftHandState = "-";
-                                string leftshoulder = "-";
-                                string rightshoulder = "-";
+                                string rightHandState = "";
+                                string leftHandState = "";
+                                string leftshoulder = "";
+                                string rightshoulder = "";
                                 string upright = "-";
                                 string paceListener = "-";
                                 string pace = "-";
                                 string rflg = "##";
-                                string lflg = "##"; 
+                                string lflg = "##";
+                                string status = ""; 
+                                string status2 ="";
+                                string leanStatusR = "";
+                                string leanStatusL = ""; 
                               //  float pL = 0;
                                 float test = 0; 
                                 float ls = 0;
@@ -215,7 +219,7 @@ namespace KinectHandTracking
                                    // aTimer.Interval = 1000;
                                     test = pacer.Position.X;
                                     nMove = "Pacing++"; 
-                                    pace = "pacing!";
+                                   // pace = "pacing!";
                                     paceUER++; 
                                    // aTimer.Enabled = true;
 
@@ -233,6 +237,7 @@ namespace KinectHandTracking
                                 else if (leftShoulder.Position.Y < rightShoulder.Position.Y)
                                 {
                                     //leaning left
+                                    leanStatusL = "Stand up straight - leaning right!";
                                     leftshoulder = "leaning right..";
                                     rs = rightShoulder.Position.Y; 
                                     rightLean++; 
@@ -240,6 +245,7 @@ namespace KinectHandTracking
                                 else if (leftShoulder.Position.Y > rightShoulder.Position.Y)
                                 {
                                     //leaning right
+                                    leanStatusR = "Stand up straight - leaning left!"; 
                                     rightshoulder = "leaning left..";
                                     ls = leftShoulder.Position.Y;
                                     leftLean++;
@@ -294,11 +300,15 @@ namespace KinectHandTracking
                                 {
                                     //right hand is to the left of the shoulder and below the shoulder
                                     //right hand i.e below shoulders above hip    testHandrightx <= fin //right hand is to left of rightshoulder
-                                    rflg = "Right in"; 
+                                    status = ""; 
+                                    rflg = "Right in";
+                                    
                                 }
                                 else
                                 {
+                                    status = "Watch your right hand";
                                     rflg = "right out";
+                                     
                                     rightHandRight++; 
                                 }
                                 fin02 = ls - .1000f; 
@@ -306,10 +316,12 @@ namespace KinectHandTracking
                                 {
                                     //right hand i.e below shoulders above hip
                                     lflg = "Left in";
+                                    status2 = ""; 
                                 }
                                 else
                                 {
-                                     lflg = "Left out";
+                                     lflg = "left out";
+                                     status2 = "Watch your left hand"; 
                                      leftHandLeft++; 
                                 }
 
@@ -389,12 +401,20 @@ namespace KinectHandTracking
                                // reCount.Text = cnt.ToString();
                                // tblRightHandState.Text = rightHandState;
                                 //tblLeftHandState.Text = leftHandState;
-                                tbleftShoulder.Text = leftshoulder;
-                                tbrightShoulder.Text = rightshoulder;
+                                
+                                
+                               // tbleftShoulder.Text = leftshoulder;
+                              
+                                //tbrightShoulder.Text = rightshoulder;
+
+
                                // tbupright.Text = upright;
                               //---  tbpl.Text = pL.ToString();
-                                tbtest.Text = pace; //nMove; // pace;
-                                 //tbtest.Text = test.ToString();
+                              
+                                
+                                //tbtest.Text = pace; //nMove; // pace;
+                                 
+                                //tbtest.Text = test.ToString();
                              //  tblh.Text = nleftHip.ToString();
                                //tbrh.Text = nrightHip.ToString();
                                // tbhandl.Text = testHandleft.ToString();
@@ -402,10 +422,36 @@ namespace KinectHandTracking
                                 //tbleftShoulder.Text = rs.ToString();
                                // tbrightShoulder.Text = ls.ToString();
                                // tbupright.Text = ur.ToString(); 
-                                 tbrflag.Text = rflg;// testHandleftx.ToString(); // rflg;
+
+                                if (leftshoulder.Equals("leaning right.."))
+                                {
+                                    tbleftShoulder.Text = leanStatusL; 
+                                }
+                                else if (rightshoulder.Equals("leaning left.."))
+                                {
+                                    tbleftShoulder.Text = leanStatusR; 
+                                }
+                                else
+                                {
+                                    tbleftShoulder.Text = ""; 
+                                }
+
+                                if((rflg.Equals("right out"))){
+                                    tbrflag.Text = status; 
+                                }
+                                else if (lflg.Equals("left out")){
+                                    tbrflag.Text = status2;
+                                }
+                                else
+                                {
+                                    tbrflag.Text = ""; 
+                                }
+
+                                // tbrflag.Text = rflg;// testHandleftx.ToString(); // rflg;
 
                                //  fin02 = ls - .1000f; 
-                                 tblflag.Text = lflg; //fin02.ToString();  //lflg; 
+                           
+                                //tblflag.Text = lflg; //fin02.ToString();  //lflg; 
 
                                
 
@@ -416,9 +462,9 @@ namespace KinectHandTracking
                                  */
 
                                  System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", print);
-                                 Thread.Sleep(1); 
+                                // Thread.Sleep(1); 
                                  System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", p2);
-                                 Thread.Sleep(1);
+                                 //Thread.Sleep(1);
                             
                             }
                         }
