@@ -31,7 +31,21 @@
                     <TextBlock Name="tbleftShoulder" Text="" Style="{StaticResource StateStyle}" />
                 </StackPanel>
 
+                <StackPanel Margin="0,50,0,0">
+                    <TextBlock Text="Pacing Start:" Style="{StaticResource TitleStyle}" />
+                    <TextBlock Name="tbtest" Text="-" Style="{StaticResource StateStyle}" />
+                </StackPanel>
+
+                <StackPanel Margin="0,50,0,0">
+                    <TextBlock Text="Pacing stat:" Style="{StaticResource TitleStyle}" />
+                    <TextBlock Name="tbtest2" Text="-" Style="{StaticResource StateStyle}" />
+                </StackPanel>
                 
+                <StackPanel Margin="0,50,0,0">
+                    <TextBlock Text="stats:" Style="{StaticResource TitleStyle}" />
+                    <TextBlock Name="tbtest3" Text="-" Style="{StaticResource StateStyle}" />
+                </StackPanel>
+
                 <StackPanel Margin="0,50,0,0"/>
 
 
