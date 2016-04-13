@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -58,9 +57,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -82,7 +81,6 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.White;
-            this.tabPage1.Controls.Add(this.progressBar1);
             this.tabPage1.Controls.Add(this.button3);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.button1);
@@ -96,14 +94,6 @@
             this.tabPage1.Size = new System.Drawing.Size(819, 461);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(288, 243);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(118, 23);
-            this.progressBar1.TabIndex = 7;
-            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
             // 
             // button3
             // 
@@ -133,6 +123,7 @@
             this.button1.TabIndex = 4;
             this.button1.Text = "Add";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox1
             // 
@@ -145,9 +136,9 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(278, 101);
+            this.listBox1.Location = new System.Drawing.Point(145, 84);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(187, 121);
+            this.listBox1.Size = new System.Drawing.Size(451, 186);
             this.listBox1.TabIndex = 2;
             // 
             // label2
@@ -163,12 +154,13 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Modern No. 20", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(242, 3);
+            this.label1.Font = new System.Drawing.Font("Modern No. 20", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(214, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(238, 24);
+            this.label1.Size = new System.Drawing.Size(312, 29);
             this.label1.TabIndex = 0;
             this.label1.Text = "Welcome to Presenting 101";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // tabPage2
             // 
@@ -228,56 +220,57 @@
             // listBox7
             // 
             this.listBox7.FormattingEnabled = true;
-            this.listBox7.Location = new System.Drawing.Point(630, 347);
+            this.listBox7.Location = new System.Drawing.Point(575, 334);
             this.listBox7.Name = "listBox7";
-            this.listBox7.Size = new System.Drawing.Size(120, 82);
+            this.listBox7.Size = new System.Drawing.Size(217, 95);
             this.listBox7.TabIndex = 14;
             // 
             // listBox6
             // 
             this.listBox6.FormattingEnabled = true;
-            this.listBox6.Location = new System.Drawing.Point(334, 347);
+            this.listBox6.Location = new System.Drawing.Point(305, 334);
             this.listBox6.Name = "listBox6";
-            this.listBox6.Size = new System.Drawing.Size(119, 82);
+            this.listBox6.Size = new System.Drawing.Size(217, 95);
             this.listBox6.TabIndex = 13;
             // 
             // listBox5
             // 
             this.listBox5.FormattingEnabled = true;
-            this.listBox5.Location = new System.Drawing.Point(12, 347);
+            this.listBox5.Location = new System.Drawing.Point(12, 334);
             this.listBox5.Name = "listBox5";
-            this.listBox5.Size = new System.Drawing.Size(119, 82);
+            this.listBox5.Size = new System.Drawing.Size(217, 95);
             this.listBox5.TabIndex = 12;
             // 
             // listBox4
             // 
             this.listBox4.FormattingEnabled = true;
-            this.listBox4.Location = new System.Drawing.Point(630, 118);
+            this.listBox4.Location = new System.Drawing.Point(575, 128);
             this.listBox4.Name = "listBox4";
-            this.listBox4.Size = new System.Drawing.Size(119, 82);
+            this.listBox4.Size = new System.Drawing.Size(217, 95);
             this.listBox4.TabIndex = 11;
             // 
             // listBox3
             // 
             this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(334, 118);
+            this.listBox3.Location = new System.Drawing.Point(305, 128);
             this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(119, 82);
+            this.listBox3.Size = new System.Drawing.Size(217, 95);
             this.listBox3.TabIndex = 10;
             // 
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(12, 118);
+            this.listBox2.Location = new System.Drawing.Point(12, 128);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(119, 82);
+            this.listBox2.Size = new System.Drawing.Size(217, 95);
             this.listBox2.TabIndex = 9;
+            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Modern No. 20", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(323, 69);
+            this.label11.Location = new System.Drawing.Point(331, 80);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(147, 24);
             this.label11.TabIndex = 8;
@@ -307,7 +300,8 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Modern No. 20", 15.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(331, 228);
+            this.label8.ForeColor = System.Drawing.Color.Red;
+            this.label8.Location = new System.Drawing.Point(326, 257);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(144, 24);
             this.label8.TabIndex = 5;
@@ -327,6 +321,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Modern No. 20", 15.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.label6.Location = new System.Drawing.Point(331, 36);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(139, 24);
@@ -337,7 +332,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Modern No. 20", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(613, 69);
+            this.label5.Location = new System.Drawing.Point(604, 80);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(189, 24);
             this.label5.TabIndex = 2;
@@ -347,7 +342,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Modern No. 20", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(22, 69);
+            this.label4.Location = new System.Drawing.Point(22, 80);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(113, 24);
             this.label4.TabIndex = 1;
@@ -359,9 +354,18 @@
             this.label3.Font = new System.Drawing.Font("Modern No. 20", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(266, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(245, 24);
+            this.label3.Size = new System.Drawing.Size(275, 24);
             this.label3.TabIndex = 0;
-            this.label3.Text = "User Error Report Statistics";
+            this.label3.Text = "User Feedback Report Statistics";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Location = new System.Drawing.Point(13, 10);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(819, 24);
+            this.panel1.TabIndex = 8;
             // 
             // timer1
             // 
@@ -370,14 +374,6 @@
             // timer2
             // 
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Location = new System.Drawing.Point(16, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(819, 24);
-            this.panel1.TabIndex = 8;
             // 
             // Form1
             // 
@@ -411,7 +407,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label3;

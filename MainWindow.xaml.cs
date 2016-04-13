@@ -31,6 +31,7 @@ namespace KinectHandTracking
         IList<Body> _bodies;
         float pL;
         private static System.Timers.Timer aTimer;
+        Stopwatch stopWatch = new Stopwatch();
         Boolean noMove;
         int second = 0;
         String nMove = "";
@@ -45,8 +46,8 @@ namespace KinectHandTracking
         String print = "";
         String p2 = "";
         ArrayList al = new ArrayList();
-        double staticPace; 
-
+        double staticPace;
+        string pace = ""; 
         #endregion
 
         #region Constructor
@@ -88,9 +89,10 @@ namespace KinectHandTracking
         void timer_Tick(object sender, System.Timers.ElapsedEventArgs e)
         {
             second = second + 1;
+            
             if (second > 10) 
             {
-                nMove = "woorksss"; 
+                pace = "woorksss"; 
                 noMove = true;
                 //aTimer.Enabled = false;
 
@@ -157,7 +159,7 @@ namespace KinectHandTracking
                                 string rightshoulder = "";
                                 string upright = "-";
                                 string paceListener = "-";
-                                string pace = "-";
+                             //   string pace = "-";
                                 string rflg = "##";
                                 string lflg = "##";
                                 string status = ""; 
@@ -189,7 +191,7 @@ namespace KinectHandTracking
                                 float pt2 = .1000f;
                                 double tollerance = 0.020000; //TODO need to figure out a good tollerance
                                 double paceTollerance = .1000;//0.100000; //Pacing tollerance for horizontal movement
-                                double pToll = 0.100000; //TODO play with these tollerances for better readings 
+                                double pToll = 0.3000; //TODO play with these tollerances for better readings 
                                
           
 				                //hand lasson counter
@@ -204,7 +206,7 @@ namespace KinectHandTracking
 
                                 pL  = pacer.Position.X;
                                 System.Timers.Timer aTimer = new System.Timers.Timer();
-                                nMove = "not pace";
+                                pace = "not pace";
 
                                 //gets your starting position
                                 if (flag != 1)
@@ -221,20 +223,47 @@ namespace KinectHandTracking
 
 
                                 //tracks pacing 
-                                pace = "";
-                                if ((staticPace + pL > .3000) ||  (-1 * (staticPace + pL) > .3000)) //case when position is 0 this does not handle it
+                              //  pace = "";
+                               
+                               if (((Math.Abs(staticPace) + Math.Abs(pL)) > pToll) )//||  (Math.Abs((staticPace + pL)) > pToll)) //case when position is 0 this does not handle it
+                               {
+                              /*  if(Math.Abs(staticPace)<1) 
                                 {
+                                    staticPace = staticPace + .1; 
+                                }
+                                if((staticPace<pL)&& (pL - staticPace > .3000))
+                                {
+
+                                } */
                                    // aTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
+                                   /* aTimer = new System.Timers.Timer(1000);
+                                    aTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
+                                    aTimer.Interval = 1000;
+                                    aTimer.Enabled = true; */
+                                    //stopWatch.Start();
+
                                    // aTimer.Interval = 1000;
                                     test = pacer.Position.X;
                                     //nMove = "Pacing++"; 
-                                    pace = "pacing!";
+                                    pace = "pacing*";
                                    // paceUER++; 
-                                   // aTimer.Enabled = true;
-
+                                  //  aTimer.Enabled = true;
+                                    
                                 }
-                               
-                                
+
+                                if (pace.Equals("pacing*"))
+                                {
+                                    stopWatch.Start();
+                                   // pace = stopWatch.Elapsed.Seconds.ToString(); 
+                                    if ((stopWatch.Elapsed.Seconds) > 10)
+                                    {
+                                        al.Clear();
+                                        flag = 0; 
+                                        pace = "";
+                                        stopWatch.Stop();
+                                        stopWatch.Reset();
+                                    }
+                                }
                                 //how long do they stay in that one place?
 
                                 /*-----------------------------------------------Lean tracking--------------------------------------------------*/
@@ -422,9 +451,9 @@ namespace KinectHandTracking
                               //---  tbpl.Text = pL.ToString();
 
                                 
-                                tbtest.Text = ptr; //  pace; //nMove; // pace;
-                                tbtest2.Text = pace;// test.ToString(); 
-                                tbtest3.Text = pL.ToString(); 
+                               // tbtest.Text = ptr; //  pace; //nMove; // pace; //pace testing
+                              //  tbtest2.Text = pace;// test.ToString();  //pace testing 
+                               // tbtest3.Text = pL.ToString();  //this is for pacing testing 
                                 //tbtest.Text = test.ToString();
                              //  tblh.Text = nleftHip.ToString();
                                //tbrh.Text = nrightHip.ToString();
