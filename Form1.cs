@@ -167,6 +167,19 @@ namespace UIv2
                 }
                 lines02 = posture.ToArray();
 
+                string[] lines03;
+                var rhythm = new List<string>();
+                var fileStream02 = new FileStream(@"C:\Users\tlewis\Desktop\rhythm.txt", FileMode.Open, FileAccess.Read);
+                using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+                {
+                    string rhythmLine;
+                    while ((rhythmLine = streamReader.ReadLine()) != null)
+                    {
+                        posture.Add(rhythmLine);
+                    }
+                }
+                lines03 = rhythm.ToArray();
+
 
                string pacinglist = File.ReadAllText(@"C:\Users\tlewis\Desktop\pacing.txt", Encoding.UTF8);
                 string volume = File.ReadAllText(@"C:\Users\tlewis\Desktop\volume.txt", Encoding.UTF8);
@@ -198,6 +211,37 @@ namespace UIv2
 
                 
                 /*-------------------- Rhythm ----------------------------*/
+                if (Int32.Parse(rhythm[0]) != 0)
+                {
+                    listBox4.Items.Add("You had " + rhythm[0] + " gaps while speaking");
+
+                    if (Int32.Parse(rhythm[0]) < 5 || rhythm[1].Equals("medium"))
+                    {
+                        listBox4.Items.Add("You minimal gaps in your speech");
+                        listBox4.Items.Add("And you had a good flow");
+                        listBox4.Items.Add("");
+                        listBox4.Items.Add("We suggest you slow down when");
+                        listBox4.Items.Add("speaking");
+                    }
+                    else if (Int32.Parse(rhythm[0]) > 5 && rhythm[1].Equals("slow"))
+                    {
+                        listBox4.Items.Add("You had several gaps while speaking");
+                        listBox4.Items.Add("and you spoke quite slowly");
+                        listBox4.Items.Add("");
+                        listBox4.Items.Add("We suggest you go over what you");
+                        listBox4.Items.Add("will say before presenting");
+                    }
+                    else if (Int32.Parse(rhythm[0]) > 5 && rhythm[1].Equals("fast"))
+                    {
+                        listBox4.Items.Add("You had several gaps while speaking");
+                        listBox4.Items.Add("and you spoke too quickly");
+                        listBox4.Items.Add("");
+                        listBox4.Items.Add("We suggest you breathe and go over");
+                        listBox4.Items.Add("what you will say before presenting");
+                    }
+
+                }
+                 
                 listBox4.Items.Add("You had 2 gaps while speaking");
                 listBox4.Items.Add("You had a good flow");
                 listBox4.Items.Add("");
@@ -236,37 +280,32 @@ namespace UIv2
                 /*-------------------- Posture -----------------------------*/
                 if ((Int32.Parse(posture[0]) + Int32.Parse(posture[1])) != 0)
                 {
-                    listBox5.Items.Add("You leaned or slouched" +(Int32.Parse(posture[0]) + Int32.Parse(posture[1]) + " times"));
+                    listBox5.Items.Add("You leaned or slouched" + (Int32.Parse(posture[0]) + Int32.Parse(posture[1]) + " times"));
                     listBox5.Items.Add("You leaned to your left");
                     listBox5.Items.Add(posture[0] + " times");
                     listBox5.Items.Add("You leaned to your right");
                     listBox5.Items.Add(posture[1] + " times");
                     if ((Int32.Parse(list[0]) + Int32.Parse(list[1])) <= 5)
                     {
-                        listBox5.Items.Add("Over all this is good. We suggest");
-                        listBox5.Items.Add("you watch where your hands are when");
-                        listBox5.Items.Add("presenting");
-                    }
-                    else
-                    {
                         listBox5.Items.Add("Overall you did pretty well");
                         listBox5.Items.Add("Just be more conscience ");
                         listBox5.Items.Add("to stand up straight");
                     }
+                    else if ((Int32.Parse(list[0]) + Int32.Parse(list[1])) > 5)
+                    {
+                        listBox5.Items.Add("This could use improvement. We suggest");
+                        listBox5.Items.Add("you try keeping you feet planted firmly");
+                        listBox5.Items.Add("and standing up straight");
+                    }
                 }
                 else
                 {
-                   listBox5.Items.Add("This could use improvement. We suggest");
-                   listBox5.Items.Add("you try keeping you feet planted firmly");
-                   listBox5.Items.Add("and standing up straight");
+                    listBox6.Items.Add("You leaned 0 times");
+                    listBox6.Items.Add("You had great posture");
+                    listBox6.Items.Add("");
+                    listBox6.Items.Add("We suggest you keep doing");
+                    listBox6.Items.Add("what you're doing");
                 }
-                 
-                 
-                listBox6.Items.Add("You leaned 0 times");
-                listBox6.Items.Add("You had great posture");
-                listBox6.Items.Add("");
-                listBox6.Items.Add("We suggest you keep doing");
-                listBox6.Items.Add("what you're doing");
 
                 /*--------------------- Pacing ----------------------------*/
                  //pacinglist
