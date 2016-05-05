@@ -47,7 +47,11 @@ namespace KinectHandTracking
         String p2 = "";
         ArrayList al = new ArrayList();
         double staticPace;
-        string pace = ""; 
+        string pace = "";
+        int lright=0;
+        int lleft = 0;
+        int hgleft = 0;
+        int hgright = 0; 
         #endregion
 
         #region Constructor
@@ -225,7 +229,7 @@ namespace KinectHandTracking
                                 //tracks pacing 
                               //  pace = "";
                                
-                               if (((Math.Abs(staticPace) + Math.Abs(pL)) > pToll) )//||  (Math.Abs((staticPace + pL)) > pToll)) //case when position is 0 this does not handle it
+                               if (((Math.Abs(staticPace) + Math.Abs(pL)) > pToll)  || (Math.Abs((staticPace + pL)) > pToll)) //case when position is 0 this does not handle it
                                {
                               /*  if(Math.Abs(staticPace)<1) 
                                 {
@@ -251,12 +255,13 @@ namespace KinectHandTracking
                                     
                                 }
 
-                                if (pace.Equals("pacing*"))
+                                if (pace.Equals("pacing*")) //see what the pacing int value would be b4 updating position
                                 {
                                     stopWatch.Start();
                                    // pace = stopWatch.Elapsed.Seconds.ToString(); 
                                     if ((stopWatch.Elapsed.Seconds) > 10)
                                     {
+                                        //int keeping track of how many times you moved around?
                                         al.Clear();
                                         flag = 0; 
                                         pace = "";
@@ -271,23 +276,40 @@ namespace KinectHandTracking
                                 {
                                     //No Direction
                                     upright = "yep";
-                                    ur = leftShoulder.Position.Y + rightShoulder.Position.Y; 
+                                    ur = leftShoulder.Position.Y + rightShoulder.Position.Y;
+                                    lleft = 0;
+                                    lright = 0; 
                                 }
                                 else if (leftShoulder.Position.Y < rightShoulder.Position.Y)
                                 {
                                     //leaning left
                                     leanStatusL = "Stand up straight - leaning right!";
                                     leftshoulder = "leaning right..";
-                                    rs = rightShoulder.Position.Y; 
-                                    rightLean++; 
+                                  
+                                    rs = rightShoulder.Position.Y;
+                                    if (leanStatusL.Equals("Stand up straight - leaning right!") && lright == 0)
+                                    {
+                                        rightLean++;
+                                        lright = 1; //flag to keep rightlean value incrementing by 1 
+                                        lleft = 0; 
+                                    }
+                                    
+                                 
                                 }
                                 else if (leftShoulder.Position.Y > rightShoulder.Position.Y)
                                 {
                                     //leaning right
                                     leanStatusR = "Stand up straight - leaning left!"; 
                                     rightshoulder = "leaning left..";
+                                    if (leanStatusR.Equals("Stand up straight - leaning left!") && lleft == 0)
+                                    {
+                                        leftLean++;
+                                        lleft = 1; //flag to keep rightlean value incrementing by 1
+                                        lright = 0; 
+                                    }
+                 
                                     ls = leftShoulder.Position.Y;
-                                    leftLean++;
+                                    //leftLean++;
                                 }
 
                                 rs = rightShoulder.Position.X;  
@@ -341,27 +363,43 @@ namespace KinectHandTracking
                                     //right hand i.e below shoulders above hip    testHandrightx <= fin //right hand is to left of rightshoulder
                                     status = ""; 
                                     rflg = "Right in";
-                                    
+                                   
+                                    hgright = 0;
+
                                 }
                                 else
                                 {
                                     status = "Watch your right hand";
                                     rflg = "right out";
-                                     
-                                    rightHandRight++; 
+
+                                    if (status.Equals("Watch your right hand") && hgright == 0)
+                                    {
+                                        rightHandRight++; 
+                                        hgright = 1; //flag to keep rightlean value incrementing by 1 
+                                        hgleft = 0;
+                                    }
+                                    
                                 }
                                 fin02 = ls - .1000f; 
                                 if ((testHandlefty <= rs) && (testHandleftx >= fin02))
                                 {
                                     //right hand i.e below shoulders above hip
                                     lflg = "Left in";
-                                    status2 = ""; 
+                                    status2 = "";
+                                    hgleft = 0;
                                 }
                                 else
                                 {
                                      lflg = "left out";
-                                     status2 = "Watch your left hand"; 
-                                     leftHandLeft++; 
+                                     status2 = "Watch your left hand";
+
+                                     if (status2.Equals("Watch your left hand") && hgleft == 0)
+                                     {
+                                         leftHandLeft++;
+                                         hgleft = 1; //flag to keep rightlean value incrementing by 1 
+                                         hgright = 0;
+                                     }
+                                    
                                 }
 
 
@@ -495,13 +533,18 @@ namespace KinectHandTracking
 
                                
 
-                                print = rightHandRight.ToString();
+                                String printRighthand = rightHandRight.ToString();
+                                String printLefthand = leftHandLeft.ToString();
+                                String printLeanLeft = leftLean.ToString();
+                                String printLeanRight = rightLean.ToString(); 
+
                                 
                                 /*
                                  * Will write data to a file and then will go back to that file to read it to create the UER
                                  */
-
-                                 System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", print);
+                                System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\gestures.txt",printLefthand + " " + printRighthand);
+                                System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\posture.txt", printLeanLeft + " " + printLeanRight);
+                                 //System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", print);
                                 // Thread.Sleep(1); 
                                  System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", p2);
                                  //Thread.Sleep(1);

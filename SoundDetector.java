@@ -1,3 +1,5 @@
+package voltest;
+
 /*
 * -------------------------------------------------------------
 *
@@ -15,7 +17,6 @@
 */
 
 
-package retest;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,6 +27,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,12 +98,24 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 	Timer timer; 
 
 	
+	public void UER(int e){
+		try {
+			PrintWriter writer = new PrintWriter("C:/Users/tlewis/Desktop/volume.txt", "UTF-8");
+			writer.println(e);
+			writer.flush();
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
 	public SoundDetector() throws LineUnavailableException {
 		startTime = System.currentTimeMillis();
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Sound Detector");
-		this.threshold = -60.0; //SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
+		this.threshold = -100.0; //SilenceDetector.DEFAULT_SILENCE_THRESHOLD;
 		JPanel inputPanel = new InputPanel();
 		inputPanel.setBorder(new TitledBorder ("test"));
 		JPanel buttonPanel = new JPanel(new GridLayout(0,1));
@@ -252,7 +268,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 
 		
 		JPanel panelWithTextArea = new JPanel(new BorderLayout());
-		textArea = new JTextArea(8,30);
+		textArea = new JTextArea(0,0);
 		textArea.setEditable(false);
 		panelWithTextArea.add(inputAndParamsPanel,BorderLayout.NORTH);
 		panelWithTextArea.add(new JScrollPane(textArea),BorderLayout.CENTER);
@@ -261,7 +277,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		
 	
 		graphPanel = new GaphPanel(threshold);
-		graphPanel.setSize(80,100);
+		graphPanel.setSize(90,100);
 		add(graphPanel,BorderLayout.CENTER);
 	}
 
@@ -488,7 +504,7 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 				
 		if(silenceDetector.currentSPL() > threshold){
 			//textArea.append("Sound detected at:" + System.currentTimeMillis() + ", " + (int)(silenceDetector.currentSPL()) + "dB SPL\n");
-			textArea.append("Decibel level:" + (int)(silenceDetector.currentSPL()) + "dB SPL\n");
+			//textArea.append("Decibel level:" + (int)(silenceDetector.currentSPL()) + "dB SPL\n");
 			textArea.setCaretPosition(textArea.getDocument().getLength());
 			
 			//gets the average of the users volume 
@@ -498,6 +514,8 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 			
 			//System.out.println("levl===" + (int)silenceDetector.currentSPL());
 			System.out.println("testing avg " + pnt);
+			textArea.append("Avg Decibel level: " + pnt + "\n");
+			UER(pnt); 
 		}
 		graphPanel.addDataPoint(silenceDetector.currentSPL(), System.currentTimeMillis()); //draws graph		
 		
@@ -548,3 +566,4 @@ public class SoundDetector extends JFrame implements AudioProcessor {
 		
 	}
 }
+

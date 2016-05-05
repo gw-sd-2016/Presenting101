@@ -1,3 +1,5 @@
+
+
 /*
  * Copyright 1999-2004 Carnegie Mellon University.
  * Portions Copyright 2004 Sun Microsystems, Inc.
@@ -22,7 +24,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
  
@@ -42,7 +47,7 @@ import java.net.URL;
  * */
 public class HelloWorld {
 	int umm, ahh, basically; 
-	
+	 
 	public HelloWorld(String[] args) throws Exception{
 		umm = 0; 
 		ahh = 0; 
@@ -59,6 +64,17 @@ public class HelloWorld {
 		
 		//write to a file and then from the ui have it read the last 3 or so lines for the 
 		//total number of bad words and how many of each bad words was said
+		
+		try {
+			PrintWriter writer = new PrintWriter("C:/Users/tlewis/Desktop/badwords.txt", "UTF-8");
+			writer.println(e);
+			writer.println(i); 
+			writer.flush();
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 
@@ -106,13 +122,14 @@ public class HelloWorld {
 			    
 			    if (result != null) {
 				String resultText = result.getBestFinalResultNoFiller();
-				String reT = result.getTimedBestResult(true, true); //testing words with time stamps
+				//String reT = result.getTimedBestResult(true, true); //testing words with time stamps
 				System.out.println("You said: " + resultText + "\n");
 				//System.out.println(result.getFrameStatistics());
 				//new MKeyListener(); 
 				
-				System.out.println("== "+ reT);
-				count++; //counts bad words -> will add functionality to count individual bad words
+				//System.out.println("== "+ reT);
+				
+				count++; 
 				if(resultText.equals("umm")){
 					umm++;
 				}

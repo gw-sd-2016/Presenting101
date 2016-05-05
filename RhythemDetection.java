@@ -1,8 +1,12 @@
-package workinRhythm;
+package rhythm;
+
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import edu.cmu.sphinx.api.Configuration;
@@ -21,15 +25,20 @@ import edu.cmu.sphinx.result.WordResult;
  * http://cmusphinx.sourceforge.net/wiki/tutorialsphinx4
  */
 public class RhythemDetection {
-	public static int uerCnt; 
-	
+	public static int uerCnt, fast, medium, slow; 
+	String speed; 
 	public RhythemDetection() throws Exception{
 		uerCnt = 0;
+		fast =0; 
+		medium =0; 
+		slow = 0; 
+		speed = "";
+		 
 		Rdet(); 
 	}
 		
 	public void Rdet() throws Exception{
-		System.out.println("Loading 648...");
+		System.out.println("Loading 649...");
     	Configuration configuration = new Configuration();
 
         configuration
@@ -68,6 +77,7 @@ public class RhythemDetection {
             if(started){
             	if((tStamp.get(0)-lastEntry)>4000){ //this checks the end of one sentence and start of another
             		System.out.println("you are taking to many pauses: "+ (tStamp.get(0)-lastEntry));
+            		uerCnt++; 
             	}
             }
         
@@ -76,13 +86,15 @@ public class RhythemDetection {
             	
             		 if((tStamp.get(i+1))-(tStamp.get(i))<100){
             			 System.out.println("greater than 300"); //talking too fast
+            			 fast++; 
             		 }
             		 else if((tStamp.get(i+1))-(tStamp.get(i))>110 && (tStamp.get(i+1))-(tStamp.get(i))<899){
             			 System.out.println("You are talking right speed"); //talking right speed
+            			 medium++; 
             		 }
             		 else if((tStamp.get(i+1))-(tStamp.get(i))>900){
             			 System.out.println("you are talking to slow"); //talking to slowly
-            			 uerCnt++; 
+            			 slow++; 
             		 }
             	 }
             }
@@ -95,19 +107,40 @@ public class RhythemDetection {
          lastEntry = tStamp.get(tStamp.size()-1);
          started = true; 
          tStamp.clear();
-         UER(uerCnt); 
+         
+         if(fast>medium && fast>slow){
+        	 speed = "fast";
+         }
+         else if(medium>fast && medium>slow){
+        	 speed = "medium"; 
+         }
+         else if(slow>fast && slow>medium){
+        	 speed = "slow"; 
+         }
+         UER(uerCnt, speed); 
      }
      recognizer.stopRecognition();
 	
 	}
 	
 	
-	public static void UER(int e){
+	public static void UER(int e, String flow){ //flow = good or bad 
 		System.out.println("Your speech has had " + e + "gaps in it");		
 		
 		//start of UER
 		if(e>6){ //need to have a timer for the course of the speech
 			System.out.println("You have had several gaps in your speech \n perhaps you should try to [suggestion]" );
+		}
+		
+		try {
+			PrintWriter writer = new PrintWriter("C:/Users/tlewis/Desktop/rhythm.txt", "UTF-8");
+			writer.println(e);
+			writer.println(flow);
+			writer.flush();
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 	
