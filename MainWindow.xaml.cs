@@ -51,7 +51,8 @@ namespace KinectHandTracking
         int lright=0;
         int lleft = 0;
         int hgleft = 0;
-        int hgright = 0; 
+        int hgright = 0;
+        int pflag = 0; 
         #endregion
 
         #region Constructor
@@ -220,16 +221,17 @@ namespace KinectHandTracking
                                         pL = pacer.Position.X;
                                         al.Add(pL);
                                         staticPace = Convert.ToDouble(al[0]); 
-                                        flag = 1; 
+                                        flag = 1;
+                                        pace = "";
                                     }
                                 }
                                 ptr = al[0].ToString();
 
 
                                 //tracks pacing 
-                              //  pace = "";
-                               
-                               if (((Math.Abs(staticPace) + Math.Abs(pL)) > pToll)  || (Math.Abs((staticPace + pL)) > pToll)) //case when position is 0 this does not handle it
+
+
+                                if ((Math.Abs(pL) - (Math.Abs(staticPace)) > .3000))//|| (Math.Abs((staticPace + pL)) > pToll)) //case when position is 0 this does not handle it
                                {
                               /*  if(Math.Abs(staticPace)<1) 
                                 {
@@ -264,10 +266,27 @@ namespace KinectHandTracking
                                         //int keeping track of how many times you moved around?
                                         al.Clear();
                                         flag = 0; 
-                                        pace = "";
+                                        pace = "not pacing";
                                         stopWatch.Stop();
                                         stopWatch.Reset();
+                                        pflag = 0;
+                                        if (paceUER != 0)
+                                        {
+                                            paceUER = paceUER - 1; 
+                                        }
                                     }
+                                    else if ((stopWatch.Elapsed.Seconds < 10) && pflag ==0)
+                                    {
+                                        paceUER++;
+                                        pflag = 1; 
+                                    }
+                                    
+                                }
+                                
+                                if (pace.Equals("not pace") && pflag == 1)
+                                {
+                                    pflag = 0;
+                                  
                                 }
                                 //how long do they stay in that one place?
 
@@ -489,9 +508,9 @@ namespace KinectHandTracking
                               //---  tbpl.Text = pL.ToString();
 
                                 
-                               // tbtest.Text = ptr; //  pace; //nMove; // pace; //pace testing
-                              //  tbtest2.Text = pace;// test.ToString();  //pace testing 
-                               // tbtest3.Text = pL.ToString();  //this is for pacing testing 
+                                tbtest.Text = ptr; //  pace; //nMove; // pace; //pace testing
+                               tbtest2.Text = pace;// test.ToString();  //pace testing 
+                                tbtest3.Text = pL.ToString();  //this is for pacing testing 
                                 //tbtest.Text = test.ToString();
                              //  tblh.Text = nleftHip.ToString();
                                //tbrh.Text = nrightHip.ToString();
@@ -536,12 +555,14 @@ namespace KinectHandTracking
                                 String printRighthand = rightHandRight.ToString();
                                 String printLefthand = leftHandLeft.ToString();
                                 String printLeanLeft = leftLean.ToString();
-                                String printLeanRight = rightLean.ToString(); 
+                                String printLeanRight = rightLean.ToString();
+                                String printPacing = paceUER.ToString(); 
 
                                 
                                 /*
                                  * Will write data to a file and then will go back to that file to read it to create the UER
                                  */
+                                System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\pacing.txt", printPacing);
                                 System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\gestures.txt",printLefthand + " " + printRighthand);
                                 System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\posture.txt", printLeanLeft + " " + printLeanRight);
                                  //System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", print);
