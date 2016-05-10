@@ -508,14 +508,14 @@ namespace KinectHandTracking
                               //---  tbpl.Text = pL.ToString();
 
                                 
-                                tbtest.Text = ptr; //  pace; //nMove; // pace; //pace testing
-                               tbtest2.Text = pace;// test.ToString();  //pace testing 
+                               // tbtest.Text = ptr; //  pace; //nMove; // pace; //pace testing
+                              // tbtest2.Text = pace;// test.ToString();  //pace testing 
                                 tbtest3.Text = pL.ToString();  //this is for pacing testing 
                                 //tbtest.Text = test.ToString();
                              //  tblh.Text = nleftHip.ToString();
                                //tbrh.Text = nrightHip.ToString();
-                               // tbhandl.Text = testHandleft.ToString();
-                                //tbhandr.Text = testHandright.ToString(); 
+                                tbhandl.Text = testHandlefty.ToString();
+                                tbhandr.Text = rs.ToString(); 
                                 //tbleftShoulder.Text = rs.ToString();
                                // tbrightShoulder.Text = ls.ToString();
                                // tbupright.Text = ur.ToString(); 
@@ -556,15 +556,21 @@ namespace KinectHandTracking
                                 String printLefthand = leftHandLeft.ToString();
                                 String printLeanLeft = leftLean.ToString();
                                 String printLeanRight = rightLean.ToString();
-                                String printPacing = paceUER.ToString(); 
+                                String printPacing = paceUER.ToString();
 
+
+                                
                                 
                                 /*
                                  * Will write data to a file and then will go back to that file to read it to create the UER
                                  */
                                 System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\pacing.txt", printPacing);
-                                System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\gestures.txt",printLefthand + " " + printRighthand);
-                                System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\posture.txt", printLeanLeft + " " + printLeanRight);
+                                string[] lines00 = { printLefthand, printRighthand };
+                                System.IO.File.WriteAllLines(@"C:\Users\tlewis\Desktop\gestures.txt", lines00);
+                                //System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\gestures.txt",printLefthand + " " + printRighthand);
+                                string[] lines01 = { printLeanLeft, printLeanRight };
+                                System.IO.File.WriteAllLines(@"C:\Users\tlewis\Desktop\posture.txt", lines01);
+                               // System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\posture.txt", printLeanLeft + " " + printLeanRight);
                                  //System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", print);
                                 // Thread.Sleep(1); 
                                  System.IO.File.WriteAllText(@"C:\Users\tlewis\Desktop\WriteLines.txt", p2);
